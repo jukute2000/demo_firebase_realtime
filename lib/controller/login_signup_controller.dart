@@ -11,9 +11,21 @@ class LoginSignupController extends GetxController {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
   RxBool isOpcusPassword = true.obs;
+  bool? isUserNotNull;
+  RxBool isLoading = true.obs;
   TextEditingController rePassword = TextEditingController();
   RxBool isOpcusRePassword = true.obs;
   RxBool isPolicy = false.obs;
+  bool isSupportFingerprint = false;
+
+  @override
+  Future<void> onInit() async {
+    super.onInit();
+    gmail.clear();
+    username.clear();
+    password.clear();
+    await init();
+  }
 
   @override
   void dispose() {
@@ -24,6 +36,12 @@ class LoginSignupController extends GetxController {
     rePassword.dispose();
   }
 
+  Future<void> init() async {
+    isUserNotNull = await _auth.checkUserNotNull();
+    isSupportFingerprint = await _auth.checkMovileSupportFingerprint();
+    isLoading.value = false;
+  }
+
   Future<void> onSubmit() async {
     if (isPageLogin.value) {
       await onSubmitLogin();
@@ -32,23 +50,55 @@ class LoginSignupController extends GetxController {
     }
   }
 
-  Future<void> onSubmitLogin() async {
-    String message = await _auth.loginAccount(gmail.text, password.text);
-    if (message == "Success") {
-      SnackbarWidget.snackBarWidget(
-        title: "Success",
-        message: "Login success",
-        isSuccess: true,
-      );
-      Get.offAndToNamed("/home");
+  Future<void> loginFingerPrint() async {
+    bool isSuccess = await _auth.checkFingerprint();
+    if (isSuccess) {
+      Get.offAndToNamed("userHome");
     } else {
       Get.showSnackbar(
         SnackbarWidget.snackBarWidget(
           title: "Fail",
-          message: message,
+          message: "Incorrect fingerprint",
           isSuccess: false,
         ),
       );
+    }
+  }
+
+  void resetTextEdit() {
+    gmail.clear();
+    username.clear();
+    password.clear();
+    rePassword.clear();
+  }
+
+  Future<void> onSubmitLogin() async {
+    if (await _auth.checkAdmin(gmail.text, password.text) == "Success") {
+      SnackbarWidget.snackBarWidget(
+        title: "Success",
+        message: "Login admin success",
+        isSuccess: true,
+      );
+      resetTextEdit();
+      Get.offAllNamed("/authorHome");
+    } else {
+      String message = await _auth.loginAccount(gmail.text, password.text);
+      if (message == "Success") {
+        SnackbarWidget.snackBarWidget(
+          title: "Success",
+          message: "Login success",
+          isSuccess: true,
+        );
+        Get.offAndToNamed("/userHome");
+      } else {
+        Get.showSnackbar(
+          SnackbarWidget.snackBarWidget(
+            title: "Fail",
+            message: message,
+            isSuccess: false,
+          ),
+        );
+      }
     }
   }
 
@@ -64,7 +114,7 @@ class LoginSignupController extends GetxController {
             isSuccess: true,
           ),
         );
-        Get.offAndToNamed("/home");
+        Get.offAndToNamed("/authorHome");
       } else {
         Get.showSnackbar(
           SnackbarWidget.snackBarWidget(

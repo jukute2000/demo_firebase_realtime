@@ -1,7 +1,5 @@
 import 'package:demo_firebase_realtime/firebase_options.dart';
 import 'package:demo_firebase_realtime/untils/route_page.dart';
-import 'package:demo_firebase_realtime/view/home_view.dart';
-import 'package:demo_firebase_realtime/view/login_signup_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,8 +22,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       getPages: getPage(),
-      home: LoginSignupView(),
+      initialRoute: '/loginSignup',
     );
   }
 }
