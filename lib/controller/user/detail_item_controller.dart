@@ -49,7 +49,7 @@ class DetailItemController extends GetxController {
       content: const Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [Text("Do you have to buy a product?")],
+        children: [Center(child: Text("Do you have to buy a product?"))],
       ),
       confirm: TextButton(
         onPressed: () {

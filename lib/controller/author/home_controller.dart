@@ -6,6 +6,7 @@ import 'package:demo_firebase_realtime/services/order_firebase.dart';
 import 'package:demo_firebase_realtime/services/type_firebase.dart';
 import 'package:demo_firebase_realtime/widgets/snackbar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../../models/cart_model.dart';
@@ -110,6 +111,36 @@ class AuthorHomeController extends GetxController {
     } else {
       isAddType.value = !isAddType.value;
     }
+  }
+
+  Future<void> getDiablog(String id, String tagImage) async {
+    Get.defaultDialog(
+      title: "Confirm delete product",
+      content: const Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Center(child: Text("Do you have to delete a product?"))],
+      ),
+      confirm: TextButton(
+        onPressed: () async {
+          Get.back();
+          await deleteItem(id, tagImage);
+        },
+        child: const Text(
+          "Confirm",
+          style: TextStyle(color: Colors.green),
+        ),
+      ),
+      cancel: TextButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: const Text(
+          "Cancel",
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
+    );
   }
 
   Future<void> deleteItem(String id, String tagImage) async {

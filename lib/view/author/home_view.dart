@@ -836,18 +836,20 @@ class ProductWidget extends StatelessWidget {
                   child: Flexible(
                     flex: 4,
                     child: ElevatedButton(
-                      style: const ButtonStyle(
+                      style: ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
-                          Colors.white60,
+                          Colors.white.withOpacity(0.6),
                         ),
-                        shape: WidgetStatePropertyAll(
-                          BeveledRectangleBorder(
-                            borderRadius: BorderRadius.zero,
+                        shape: const WidgetStatePropertyAll(
+                          CircleBorder(
+                            side: BorderSide(
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
-                      onPressed: () async {
-                        await controller.deleteItem(item.id, item.tagImage);
+                      onPressed: () {
+                        controller.getDiablog(item.id, item.tagImage);
                       },
                       child: const FittedBox(
                         fit: BoxFit.contain,
@@ -864,15 +866,12 @@ class ProductWidget extends StatelessWidget {
                   child: FittedBox(
                     fit: BoxFit.contain,
                     child: ElevatedButton(
-                      style: const ButtonStyle(
+                      style: ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
-                          Colors.white60,
+                          Colors.white.withOpacity(0.6),
                         ),
-                        shape: WidgetStatePropertyAll(
-                          BeveledRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                        ),
+                        shape: const WidgetStatePropertyAll(
+                            CircleBorder(side: BorderSide(color: Colors.grey))),
                       ),
                       onPressed: () {
                         Get.toNamed("/authorAddEdit", arguments: {

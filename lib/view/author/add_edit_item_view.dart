@@ -30,7 +30,9 @@ class AuthorAddEditItemView extends StatelessWidget {
       body: Obx(
         () => controller.isLoading.value
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.grey,
+                ),
               )
             : SafeArea(
                 child: SingleChildScrollView(

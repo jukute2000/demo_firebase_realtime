@@ -693,7 +693,9 @@ class _productWidget extends StatelessWidget {
                   "Type : $type",
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
