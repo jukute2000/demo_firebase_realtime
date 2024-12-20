@@ -254,9 +254,9 @@ class AuthorHomeController extends GetxController {
         }
       }
     }
-    if (orderHasProductNull.isEmpty) {
+    if (orderHasProductNull.isNotEmpty) {
       for (var e in orderHasProductNull) {
-        _orderFirebase.deleteOrderAdminById(e);
+        await _orderFirebase.deleteOrderAdminById(e);
       }
       return true;
     }
@@ -274,10 +274,6 @@ class AuthorHomeController extends GetxController {
       listStatusOrders.clear();
       isOrdersNull.value = orders.isEmpty;
       if (!isOrdersNull.value) {
-        bool isOrderHasProductNull = await getItemOrder();
-        if (!isOrderHasProductNull) {
-          orders = await _orderFirebase.getAllOrders();
-        }
         for (var order in orders) {
           List<Item> tmp = [];
           for (var cart in order.carts) {
@@ -388,6 +384,10 @@ class AuthorHomeController extends GetxController {
       isOrdersNull.value = true;
     }
     if (!isOrdersNull.value) {
+      bool isOrderHasProductNotNull = await getItemOrder();
+      if (isOrderHasProductNotNull) {
+        orders = await _orderFirebase.getAllOrders();
+      }
       for (var element in orders) {
         List<Item> items = [];
         for (var cart in element.carts) {

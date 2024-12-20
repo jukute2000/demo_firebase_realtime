@@ -454,6 +454,8 @@ class _order extends StatelessWidget {
                                     FittedBox(
                                       fit: BoxFit.contain,
                                       child: Text.rich(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         TextSpan(
                                           children: [
                                             TextSpan(
