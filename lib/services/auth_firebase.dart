@@ -108,8 +108,8 @@ class AuthFirebase {
   }
 
   Future<Auth> getUser() async {
+    _auth.currentUser!.reload();
     User auth = _auth.currentUser!;
-    auth.reload();
     Auth user = Auth(
       gmail: auth.email!,
       userName: auth.displayName!,

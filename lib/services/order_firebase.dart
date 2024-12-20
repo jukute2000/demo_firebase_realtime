@@ -217,6 +217,30 @@ class OrderFirebase {
     await ref.remove();
   }
 
+  Future<void> deleteOrderAdminById(String idOrder) async {
+    final ref = _database.ref("order");
+    final snapshot = await ref.get();
+    Map<String, dynamic> data =
+        Map<String, dynamic>.from(snapshot.value as Map);
+    data.forEach(
+      (userId, userData) {
+        Map<String, dynamic> dataOrder =
+            Map<String, dynamic>.from(userData as Map);
+        dataOrder.forEach(
+          (orderId, orderData) async {
+            if (orderId == idOrder) {
+              await _database
+                  .ref("order")
+                  .child(userId)
+                  .child(orderId)
+                  .remove();
+            }
+          },
+        );
+      },
+    );
+  }
+
   Future<List<Order>> getOrdersUserBySearch(
       String idUser, String search) async {
     final ref = _database.ref("order").child(idUser);
@@ -280,6 +304,46 @@ class OrderFirebase {
           if (order.status == status) {
             orders.add(order);
           }
+        },
+      );
+    }
+    return orders;
+  }
+
+  Future<List<Order>> getOrdersAdminByStatus(int status) async {
+    final ref = _database.ref("order");
+    List<Order> orders = [];
+    final snapshot = await ref.get();
+    if (snapshot.exists) {
+      Map<String, dynamic> dataUser =
+          Map<String, dynamic>.from(snapshot.value as Map);
+      dataUser.forEach(
+        (userId, userData) {
+          Map<String, dynamic> data =
+              Map<String, dynamic>.from(userData as Map);
+          data.forEach(
+            (orderId, orderData) {
+              List<Cart> carts = (orderData["carts"] as List<dynamic>).map(
+                (e) {
+                  return Cart(
+                    idItem: e["idItem"],
+                    quantity: e["quantity"],
+                    totalPrice: e["totalPrice"],
+                  );
+                },
+              ).toList();
+              final order = Order(
+                idOrder: orderId,
+                date: orderData["date"],
+                carts: carts,
+                status: orderData["status"],
+                message: orderData["message"],
+              );
+              if (order.status == status) {
+                orders.add(order);
+              }
+            },
+          );
         },
       );
     }

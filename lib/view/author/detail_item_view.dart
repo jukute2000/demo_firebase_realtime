@@ -47,20 +47,20 @@ class AuthorDetailItemView extends StatelessWidget {
                                     TextSpan(
                                       children: [
                                         TextSpan(
-                                          text: "${controller.price}",
-                                          style: const TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
+                                          text:
+                                              "${AppTheme.price(controller.price)} ",
+                                          style: TextStyles.bold(
+                                            16,
+                                            Colors.red,
+                                            TextDecoration.none,
                                           ),
                                         ),
-                                        const TextSpan(
+                                        TextSpan(
                                           text: "đ",
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            decoration:
-                                                TextDecoration.underline,
-                                            decorationColor: Colors.red,
+                                          style: TextStyles.bold(
+                                            16,
+                                            Colors.red,
+                                            TextDecoration.none,
                                           ),
                                         ),
                                       ],
@@ -76,10 +76,10 @@ class AuthorDetailItemView extends StatelessWidget {
                               controller.title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: AppTheme.textColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              style: TextStyles.bold(
+                                16,
+                                Colors.black,
+                                TextDecoration.none,
                               ),
                             ),
                             const SizedBox(
@@ -87,23 +87,31 @@ class AuthorDetailItemView extends StatelessWidget {
                             ),
                             Text(
                               "Type: ${controller.type!.nameType}",
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
+                              style: TextStyles.medium(
+                                14,
+                                Colors.black,
+                                TextDecoration.none,
                               ),
                             ),
                             const Divider(
                               height: 16,
                             ),
-                            const Text(
+                            Text(
                               "Description :",
-                              style: TextStyle(
-                                color: AppTheme.textColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              style: TextStyles.bold(
+                                16,
+                                Colors.black,
+                                TextDecoration.none,
                               ),
                             ),
-                            Text(controller.description),
+                            Text(
+                              controller.description,
+                              style: TextStyles.medium(
+                                14,
+                                Colors.black,
+                                TextDecoration.none,
+                              ),
+                            ),
                             const Divider(
                               height: 16,
                             ),
@@ -160,10 +168,10 @@ class bottomAppBarWidget extends StatelessWidget {
               heroTag: "addItemShopCart",
               shape: const Border(),
               onPressed: () {},
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FittedBox(
+                  const FittedBox(
                     fit: BoxFit.contain,
                     child: Icon(
                       Icons.shopping_cart_checkout,
@@ -174,7 +182,11 @@ class bottomAppBarWidget extends StatelessWidget {
                     fit: BoxFit.contain,
                     child: Text(
                       "Add to Cart",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyles.medium(
+                        14,
+                        Colors.white,
+                        TextDecoration.none,
+                      ),
                     ),
                   )
                 ],
@@ -193,19 +205,20 @@ class bottomAppBarWidget extends StatelessWidget {
                 child: Text.rich(
                   textAlign: TextAlign.center,
                   TextSpan(children: [
-                    const TextSpan(
+                    TextSpan(
                       text: "Buy\n",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyles.medium(
+                        14,
+                        Colors.white,
+                        TextDecoration.none,
+                      ),
                     ),
                     TextSpan(
-                      text: "${controller.price} đ",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.white,
-                        decorationStyle: TextDecorationStyle.solid,
-                        decorationThickness: 1,
+                      text: "${AppTheme.price(controller.price)} đ",
+                      style: TextStyles.medium(
+                        14,
+                        Colors.white,
+                        TextDecoration.none,
                       ),
                     ),
                   ]),

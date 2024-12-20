@@ -43,6 +43,18 @@ class UserHomeController extends GetxController {
     typesAll = await _typeFirebase.getAllType();
   }
 
+  Future<void> moveUser() async {
+    Get.toNamed("/user")!.then(
+      (value) async {
+        if (value) {
+          isLoading.value = true;
+          await getUser();
+          isLoading.value = false;
+        }
+      },
+    );
+  }
+
   Future<void> getItemDataByIdType(String idType) async {
     isLoading.value = true;
     items = await _itemFirebase.getItemsByIdtype(false, idType);

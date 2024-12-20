@@ -26,8 +26,10 @@ class LoginSignupView extends StatelessWidget {
         title: Obx(
           () => Text(
             controller.isPageLogin.value ? "LOGIN" : "SIGNUP",
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
+            style: TextStyles.bold(
+              18,
+              Colors.black,
+              TextDecoration.none,
             ),
           ),
         ),
@@ -61,13 +63,14 @@ class LoginSignupView extends StatelessWidget {
                                 controller: controller.gmail,
                                 keyboardType: TextInputType.emailAddress,
                                 cursorColor: Colors.grey,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   icon: Icon(Icons.email_outlined),
                                   label: Text(
-                                    "Gmail :",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                                    "Gmail:",
+                                    style: TextStyles.medium(
+                                      14,
+                                      Colors.black,
+                                      TextDecoration.none,
                                     ),
                                   ),
                                   border: InputBorder.none,
@@ -90,13 +93,14 @@ class LoginSignupView extends StatelessWidget {
                                   controller: controller.username,
                                   keyboardType: TextInputType.text,
                                   cursorColor: Colors.grey,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     icon: Icon(Icons.person),
                                     label: Text(
-                                      "User Name :",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
+                                      "User Name:",
+                                      style: TextStyles.medium(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.none,
                                       ),
                                     ),
                                     border: InputBorder.none,
@@ -130,11 +134,12 @@ class LoginSignupView extends StatelessWidget {
                                               ? Icons.visibility_off
                                               : Icons.visibility_sharp),
                                     ),
-                                    label: const Text(
-                                      "Passwoord :",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
+                                    label: Text(
+                                      "Passwoord:",
+                                      style: TextStyles.medium(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.none,
                                       ),
                                     ),
                                     border: InputBorder.none,
@@ -174,11 +179,12 @@ class LoginSignupView extends StatelessWidget {
                                                 ? Icons.visibility_off
                                                 : Icons.visibility_sharp),
                                       ),
-                                      label: const Text(
-                                        "Re-Passwoord :",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                                      label: Text(
+                                        "Re-Passwoord:",
+                                        style: TextStyles.medium(
+                                          14,
+                                          Colors.black,
+                                          TextDecoration.none,
                                         ),
                                       ),
                                       border: InputBorder.none,
@@ -194,20 +200,23 @@ class LoginSignupView extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text.rich(
+                                  Text.rich(
                                     TextSpan(
                                       children: [
                                         TextSpan(
                                           text: "I have read the ",
-                                          style: TextStyle(color: Colors.black),
+                                          style: TextStyles.medium(
+                                            14,
+                                            Colors.black,
+                                            TextDecoration.none,
+                                          ),
                                         ),
                                         TextSpan(
                                           text: "Privace Policy",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontWeight: FontWeight.bold,
+                                          style: TextStyles.medium(
+                                            14,
+                                            Colors.black,
+                                            TextDecoration.underline,
                                           ),
                                         ),
                                       ],
@@ -254,7 +263,11 @@ class LoginSignupView extends StatelessWidget {
                                 controller.isPageLogin.value
                                     ? "Login"
                                     : "Get Started",
-                                style: const TextStyle(color: Colors.black),
+                                style: TextStyles.medium(
+                                  14,
+                                  Colors.black,
+                                  TextDecoration.none,
+                                ),
                               ),
                             ),
                             if (controller.isPageLogin.value)
@@ -282,9 +295,13 @@ class LoginSignupView extends StatelessWidget {
                             if (controller.isPageLogin.value)
                               TextButton(
                                 onPressed: () {},
-                                child: const Text(
+                                child: Text(
                                   "Forgot Password?",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyles.medium(
+                                    14,
+                                    Colors.black,
+                                    TextDecoration.none,
+                                  ),
                                 ),
                               ),
                             if (controller.isPageLogin.value)
@@ -295,17 +312,24 @@ class LoginSignupView extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text("ALREADY HAVE AN ACCOUNT? "),
+                                  Text(
+                                    "ALREADY HAVE AN ACCOUNT? ",
+                                    style: TextStyles.medium(
+                                      14,
+                                      Colors.black,
+                                      TextDecoration.none,
+                                    ),
+                                  ),
                                   TextButton(
                                     onPressed: () {
                                       controller.changePageAddEdit();
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       "SIGN UP",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        decoration: TextDecoration.underline,
+                                      style: TextStyles.bold(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.underline,
                                       ),
                                     ),
                                   ),

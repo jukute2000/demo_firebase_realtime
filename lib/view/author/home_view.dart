@@ -22,32 +22,74 @@ class AuthHomeView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppTheme.primaryColor,
         leading: Obx(
-          () => controller.selectPage.value == 0
-              ? PopupMenuButton(
-                  color: Colors.white,
-                  onSelected: (value) {
-                    controller.getItemDataByIdType(value);
-                  },
-                  icon: Image(
-                    image: const AssetImage("assets/images/arrange.png"),
-                    fit: BoxFit.cover,
-                    height: size.width * 0.06,
-                    width: size.width * 0.06,
-                  ),
-                  itemBuilder: (context) => List.generate(
-                    controller.types.length,
-                    (index) {
-                      TypeItem type = controller.types[index];
-                      return PopupMenuItem(
-                        value: type.idType,
-                        child: ListTile(
-                          title: Text(type.nameType),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              : const SizedBox(),
+          () => controller.isLoading.value
+              ? const SizedBox()
+              : controller.selectPage.value == 0
+                  ? PopupMenuButton(
+                      color: Colors.white,
+                      onSelected: (value) {
+                        controller.getItemDataByIdType(value);
+                      },
+                      icon: Image(
+                        image: const AssetImage("assets/images/arrange.png"),
+                        fit: BoxFit.cover,
+                        height: size.width * 0.06,
+                        width: size.width * 0.06,
+                      ),
+                      itemBuilder: (context) => List.generate(
+                        controller.types.length,
+                        (index) {
+                          TypeItem type = controller.types[index];
+                          return PopupMenuItem(
+                            value: type.idType,
+                            child: ListTile(
+                              title: Text(
+                                type.nameType,
+                                style: TextStyles.medium(
+                                  14,
+                                  Colors.black,
+                                  TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  : controller.selectPage.value == 1
+                      ? PopupMenuButton(
+                          color: Colors.white,
+                          onSelected: (value) {
+                            controller.getDataOrdersByStatus(value: value);
+                          },
+                          icon: Image(
+                            image:
+                                const AssetImage("assets/images/arrange.png"),
+                            fit: BoxFit.cover,
+                            height: size.width * 0.06,
+                            width: size.width * 0.06,
+                          ),
+                          itemBuilder: (context) => List.generate(
+                            controller.filterStatusOrderData.length,
+                            (index) {
+                              return PopupMenuItem(
+                                value: index,
+                                child: ListTile(
+                                  title: Text(
+                                    controller.filterStatusOrderData[index]
+                                        .toString(),
+                                    style: TextStyles.medium(
+                                      14,
+                                      Colors.black,
+                                      TextDecoration.none,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : const SizedBox(),
         ),
         actions: [
           IconButton(
@@ -129,8 +171,15 @@ class TypeProductWidget extends StatelessWidget {
       () => Stack(
         children: [
           controller.isTypeProductNull.value
-              ? const Center(
-                  child: Text("Not type product"),
+              ? Center(
+                  child: Text(
+                    "Not type product",
+                    style: TextStyles.bold(
+                      16,
+                      Colors.black,
+                      TextDecoration.none,
+                    ),
+                  ),
                 )
               : Visibility(
                   visible: controller.isLoading.value,
@@ -152,9 +201,22 @@ class TypeProductWidget extends StatelessWidget {
                               child: Stack(
                                 children: [
                                   ListTile(
-                                    title: Text(type.nameType),
-                                    subtitle: Text(controller
-                                        .statusTypeData[type.status]!),
+                                    title: Text(
+                                      type.nameType,
+                                      style: TextStyles.bold(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.none,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      controller.statusTypeData[type.status]!,
+                                      style: TextStyles.medium(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.none,
+                                      ),
+                                    ),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -216,10 +278,10 @@ class TypeProductWidget extends StatelessWidget {
                         controller.isEditType.value
                             ? "Edit Type Product"
                             : "Add Type Product",
-                        style: const TextStyle(
-                          color: AppTheme.textColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        style: TextStyles.bold(
+                          16,
+                          Colors.black,
+                          TextDecoration.none,
                         ),
                       ),
                     ),
@@ -232,7 +294,11 @@ class TypeProductWidget extends StatelessWidget {
                       maxLength: 50,
                       decoration: InputDecoration(
                         labelText: "Type",
-                        labelStyle: const TextStyle(color: Colors.black),
+                        labelStyle: TextStyles.medium(
+                          16,
+                          Colors.black,
+                          TextDecoration.none,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.grey),
@@ -254,13 +320,28 @@ class TypeProductWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           isExpanded: true,
                           value: controller.statusTypeSelect.value,
-                          hint: const Text("Status :"),
+                          hint: Text(
+                            "Status :",
+                            style: TextStyles.medium(
+                              14,
+                              Colors.black,
+                              TextDecoration.none,
+                            ),
+                          ),
                           dropdownColor: Colors.white,
                           items: List.generate(
                             controller.statusTypeData.length,
                             (index) => DropdownMenuItem(
-                                value: index,
-                                child: Text(controller.statusTypeData[index]!)),
+                              value: index,
+                              child: Text(
+                                controller.statusTypeData[index]!,
+                                style: TextStyles.medium(
+                                  16,
+                                  Colors.black,
+                                  TextDecoration.none,
+                                ),
+                              ),
+                            ),
                           ),
                           onChanged: (value) {
                             controller.statusTypeSelect.value = value!;
@@ -284,9 +365,13 @@ class TypeProductWidget extends StatelessWidget {
                           backgroundColor:
                               WidgetStatePropertyAll(AppTheme.primaryColor),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Save",
-                          style: TextStyle(color: AppTheme.textColor),
+                          style: TextStyles.medium(
+                            14,
+                            Colors.black,
+                            TextDecoration.none,
+                          ),
                         ),
                       ),
                     ),
@@ -319,8 +404,15 @@ class OrderWidget extends StatelessWidget {
           replacement: RefreshIndicator(
             onRefresh: () => controller.getAllOrder(),
             child: controller.isOrdersNull.value
-                ? const Center(
-                    child: Text("Non Order"),
+                ? Center(
+                    child: Text(
+                      "Non Order",
+                      style: TextStyles.bold(
+                        16,
+                        Colors.black,
+                        TextDecoration.none,
+                      ),
+                    ),
                   )
                 : Column(
                     children: [
@@ -335,8 +427,11 @@ class OrderWidget extends StatelessWidget {
                                 controller: controller.searchOrder,
                                 decoration: InputDecoration(
                                   labelText: "Search",
-                                  labelStyle:
-                                      const TextStyle(color: Colors.black),
+                                  labelStyle: TextStyles.medium(
+                                    16,
+                                    Colors.black,
+                                    TextDecoration.none,
+                                  ),
                                   suffixIcon: IconButton(
                                     onPressed: controller.getOrderBySearch,
                                     icon: const Icon(Icons.search,
@@ -373,10 +468,14 @@ class OrderWidget extends StatelessWidget {
                       Expanded(
                         child: controller.isOrderSearchNull.value &&
                                 controller.isSearchOrder.value
-                            ? const Center(
+                            ? Center(
                                 child: Text(
                                   "No orders found.",
-                                  style: TextStyle(fontSize: 18),
+                                  style: TextStyles.bold(
+                                    16,
+                                    Colors.black,
+                                    TextDecoration.none,
+                                  ),
                                 ),
                               )
                             : ListView.builder(
@@ -397,13 +496,13 @@ class OrderWidget extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Center(
+                                        Center(
                                           child: Text(
                                             "Order Information",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
+                                            style: TextStyles.bold(
+                                              18,
+                                              Colors.black,
+                                              TextDecoration.none,
                                             ),
                                           ),
                                         ),
@@ -411,19 +510,20 @@ class OrderWidget extends StatelessWidget {
                                         Text.rich(
                                           TextSpan(
                                             children: [
-                                              const TextSpan(
+                                              TextSpan(
                                                 text: "Id order:",
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                style: TextStyles.bold(
+                                                  16,
+                                                  Colors.black,
+                                                  TextDecoration.underline,
                                                 ),
                                               ),
                                               TextSpan(
                                                 text: " ${order.idOrder}",
-                                                style: const TextStyle(
-                                                  fontSize: 16,
+                                                style: TextStyles.light(
+                                                  16,
+                                                  Colors.black,
+                                                  TextDecoration.none,
                                                 ),
                                               )
                                             ],
@@ -432,33 +532,32 @@ class OrderWidget extends StatelessWidget {
                                         Text.rich(
                                           TextSpan(
                                             children: [
-                                              const TextSpan(
+                                              TextSpan(
                                                 text: "Date:",
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                style: TextStyles.bold(
+                                                  16,
+                                                  Colors.black,
+                                                  TextDecoration.underline,
                                                 ),
                                               ),
                                               TextSpan(
                                                 text: " ${order.date}",
-                                                style: const TextStyle(
-                                                  fontSize: 16,
+                                                style: TextStyles.light(
+                                                  16,
+                                                  Colors.black,
+                                                  TextDecoration.none,
                                                 ),
                                               )
                                             ],
                                           ),
                                         ),
                                         const SizedBox(height: 8),
-                                        const Text(
+                                        Text(
                                           "Product:",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            decoration:
-                                                TextDecoration.underline,
+                                          style: TextStyles.bold(
+                                            16,
+                                            Colors.black,
+                                            TextDecoration.underline,
                                           ),
                                         ),
                                         const Divider(color: Colors.grey),
@@ -508,23 +607,18 @@ class OrderWidget extends StatelessWidget {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            FittedBox(
-                                                              fit: BoxFit
-                                                                  .contain,
-                                                              child: Text(
-                                                                item.title,
-                                                                maxLines: 2,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  color: AppTheme
-                                                                      .textColor,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
+                                                            Text(
+                                                              item.title,
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyles
+                                                                  .bold(
+                                                                14,
+                                                                Colors.black,
+                                                                TextDecoration
+                                                                    .none,
                                                               ),
                                                             ),
                                                             Align(
@@ -533,9 +627,12 @@ class OrderWidget extends StatelessWidget {
                                                               child: Text(
                                                                 "x ${cart.quantity}",
                                                                 style:
-                                                                    const TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
+                                                                    TextStyles
+                                                                        .medium(
+                                                                  14,
+                                                                  Colors.grey,
+                                                                  TextDecoration
+                                                                      .none,
                                                                 ),
                                                               ),
                                                             ),
@@ -547,11 +644,14 @@ class OrderWidget extends StatelessWidget {
                                                               fit: BoxFit
                                                                   .contain,
                                                               child: Text(
-                                                                "Total price: ${cart.totalPrice}đ",
+                                                                "Total price: ${AppTheme.price(cart.totalPrice)} đ",
                                                                 style:
-                                                                    const TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
+                                                                    TextStyles
+                                                                        .medium(
+                                                                  14,
+                                                                  Colors.grey,
+                                                                  TextDecoration
+                                                                      .none,
                                                                 ),
                                                               ),
                                                             ),
@@ -567,22 +667,23 @@ class OrderWidget extends StatelessWidget {
                                         ),
                                         const Divider(color: Colors.grey),
                                         Text(
-                                          "Total price all products ($totalAllProduct): $totalAllPrice đ",
-                                          style: const TextStyle(
-                                            color: AppTheme.textColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                          "Total price all products ($totalAllProduct): ${AppTheme.price(totalAllPrice)} đ",
+                                          style: TextStyles.medium(
+                                            16,
+                                            Colors.black,
+                                            TextDecoration.none,
                                           ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            const Text(
+                                            Text(
                                               "Order status:",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
+                                              style: TextStyles.bold(
+                                                16,
+                                                Colors.black,
+                                                TextDecoration.none,
                                               ),
                                             ),
                                             const SizedBox(width: 8),
@@ -598,6 +699,11 @@ class OrderWidget extends StatelessWidget {
                                                     child: Text(
                                                       controller.statusData[
                                                           index + 1]!,
+                                                      style: TextStyles.medium(
+                                                        14,
+                                                        Colors.black,
+                                                        TextDecoration.none,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -659,8 +765,15 @@ class _homeState extends State<HomeWidget> {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Center(
-                    child: Text("Non products"),
+                  Center(
+                    child: Text(
+                      "Non products",
+                      style: TextStyles.bold(
+                        16,
+                        Colors.black,
+                        TextDecoration.none,
+                      ),
+                    ),
                   ),
                   Center(
                     child: IconButton(
@@ -686,7 +799,11 @@ class _homeState extends State<HomeWidget> {
                           controller: widget.controller.searchProduct,
                           decoration: InputDecoration(
                             labelText: "Search",
-                            labelStyle: const TextStyle(color: Colors.black),
+                            labelStyle: TextStyles.medium(
+                              16,
+                              Colors.black,
+                              TextDecoration.none,
+                            ),
                             suffixIcon: IconButton(
                               onPressed: () {
                                 widget.controller.getItemDataBySearch();
@@ -800,9 +917,10 @@ class ProductWidget extends StatelessWidget {
                 "$type - ${item.title}",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: AppTheme.textColor,
-                  fontWeight: FontWeight.bold,
+                style: TextStyles.medium(
+                  14,
+                  Colors.black,
+                  TextDecoration.none,
                 ),
               ),
             ),
@@ -816,9 +934,13 @@ class ProductWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8, right: 8),
                 child: Text(
-                  "${item.price} đ",
+                  "${AppTheme.price(item.price)} đ",
                   maxLines: 1,
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyles.medium(
+                    14,
+                    Colors.red,
+                    TextDecoration.none,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

@@ -44,13 +44,13 @@ class OrderView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Center(
+                          Center(
                             child: Text(
                               "Order",
-                              style: TextStyle(
-                                color: AppTheme.textColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                              style: TextStyles.bold(
+                                18,
+                                Colors.black,
+                                TextDecoration.none,
                               ),
                             ),
                           ),
@@ -84,31 +84,46 @@ class OrderView extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "Delivery address:",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              decoration:
-                                                  TextDecoration.underline,
+                                            style: TextStyles.medium(
+                                              16,
+                                              Colors.black,
+                                              TextDecoration.underline,
                                             ),
                                           ),
                                           controller.isAddressNull.value
-                                              ? const Text(
+                                              ? Text(
                                                   "User does not have saved delivery information",
+                                                  style: TextStyles.medium(
+                                                    16,
+                                                    Colors.black,
+                                                    TextDecoration.none,
+                                                  ),
                                                 )
                                               : Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                        "${controller.address!.name}| ${controller.address!.phone}"),
+                                                      "${controller.address!.name}| ${controller.address!.phone}",
+                                                      style: TextStyles.light(
+                                                        14,
+                                                        Colors.black,
+                                                        TextDecoration.none,
+                                                      ),
+                                                    ),
                                                     Text(
                                                       controller
                                                           .address!.address,
                                                       maxLines: 2,
                                                       overflow:
                                                           TextOverflow.ellipsis,
+                                                      style: TextStyles.light(
+                                                        14,
+                                                        Colors.black,
+                                                        TextDecoration.none,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -151,13 +166,12 @@ class OrderView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   "Products:",
-                                  style: TextStyle(
-                                    color: AppTheme.textColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    decoration: TextDecoration.underline,
+                                  style: TextStyles.medium(
+                                    16,
+                                    Colors.black,
+                                    TextDecoration.underline,
                                   ),
                                 ),
                                 Obx(
@@ -184,6 +198,11 @@ class OrderView extends StatelessWidget {
                                               item.title,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
+                                              style: TextStyles.medium(
+                                                16,
+                                                Colors.black,
+                                                TextDecoration.none,
+                                              ),
                                             ),
                                             subtitle: Row(
                                               mainAxisAlignment:
@@ -191,13 +210,24 @@ class OrderView extends StatelessWidget {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  "Total Price : ${controller.isCart ? cart!.totalPrice : item.price}đ",
+                                                  "Total Price: ${controller.isCart ? AppTheme.price(cart!.totalPrice) : AppTheme.price(item.price)} đ",
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 1,
+                                                  style: TextStyles.medium(
+                                                    14,
+                                                    Colors.grey,
+                                                    TextDecoration.none,
+                                                  ),
                                                 ),
                                                 Text(
-                                                    "x ${controller.isCart ? cart!.quantity : 1}")
+                                                  "x ${controller.isCart ? cart!.quantity : 1}",
+                                                  style: TextStyles.medium(
+                                                    14,
+                                                    Colors.grey,
+                                                    TextDecoration.none,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -214,14 +244,22 @@ class OrderView extends StatelessWidget {
                                       children: [
                                         Text(
                                           controller.isCart
-                                              ? "Total price products(x${controller.totalQuantityProduct.toString()}): "
+                                              ? "Total price products(x${controller.totalQuantityProduct}): "
                                               : "Total price products: ",
-                                          style: const TextStyle(
-                                            color: AppTheme.textColor,
+                                          style: TextStyles.medium(
+                                            16,
+                                            Colors.black,
+                                            TextDecoration.none,
                                           ),
                                         ),
                                         Text(
-                                            "${controller.isCart ? controller.totalPriceProduct.toString() : controller.items.first.price.toString()}đ")
+                                          "${controller.isCart ? AppTheme.price(controller.totalPriceProduct) : AppTheme.price(controller.items.first.price)} đ",
+                                          style: TextStyles.medium(
+                                            16,
+                                            Colors.black,
+                                            TextDecoration.none,
+                                          ),
+                                        ),
                                       ],
                                     )
                                   ],
@@ -241,11 +279,12 @@ class OrderView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                const Text(
+                                Text(
                                   "Message for the shop:",
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 16,
+                                  style: TextStyles.medium(
+                                    16,
+                                    Colors.black,
+                                    TextDecoration.underline,
                                   ),
                                 ),
                                 TextField(
@@ -280,10 +319,12 @@ class OrderView extends StatelessWidget {
                                   onPressed: () {
                                     controller.order();
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     "Order",
-                                    style: TextStyle(
-                                      color: AppTheme.textColor,
+                                    style: TextStyles.medium(
+                                      14,
+                                      Colors.black,
+                                      TextDecoration.none,
                                     ),
                                   ),
                                 ),

@@ -38,23 +38,23 @@ class AddressView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Delivery address:",
-                              style: TextStyle(
-                                  color: AppTheme.textColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline),
+                              style: TextStyles.bold(
+                                18,
+                                Colors.black,
+                                TextDecoration.underline,
+                              ),
                             ),
                             controller.isAddressNull.value
-                                ? const Center(
+                                ? Center(
                                     child: Text(
-                                      "User does not have saved delivery information",
-                                      style: TextStyle(
-                                        color: AppTheme.textColor,
-                                        fontSize: 16,
-                                      ),
-                                    ),
+                                        "User does not have saved delivery information",
+                                        style: TextStyles.bold(
+                                          18,
+                                          Colors.black,
+                                          TextDecoration.none,
+                                        )),
                                   )
                                 : ListView.builder(
                                     itemCount: controller.addresses!.length,
@@ -77,6 +77,11 @@ class AddressView extends StatelessWidget {
                                             "${addrress.name} | ${addrress.phone}",
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
+                                            style: TextStyles.medium(
+                                              16,
+                                              Colors.black,
+                                              TextDecoration.none,
+                                            ),
                                           ),
                                           leading:
                                               !controller.isAddAddress.value
@@ -99,6 +104,11 @@ class AddressView extends StatelessWidget {
                                             addrress.address,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
+                                            style: TextStyles.light(
+                                              14,
+                                              Colors.black,
+                                              TextDecoration.none,
+                                            ),
                                           ),
                                           trailing:
                                               !controller.isAddAddress.value
@@ -108,10 +118,12 @@ class AddressView extends StatelessWidget {
                                                             .changeIsEditAddress(
                                                                 addrress);
                                                       },
-                                                      child: const Text(
+                                                      child: Text(
                                                         "Edit",
-                                                        style: TextStyle(
-                                                          color: Colors.green,
+                                                        style: TextStyles.bold(
+                                                          14,
+                                                          Colors.green,
+                                                          TextDecoration.none,
                                                         ),
                                                       ),
                                                     )
@@ -126,21 +138,24 @@ class AddressView extends StatelessWidget {
                                     onPressed: () {
                                       controller.changeIsAddAddress();
                                     },
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.add,
                                           color: Colors.black,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 8,
                                         ),
                                         Text(
                                           "Add delivery address",
-                                          style: TextStyle(
-                                              color: AppTheme.textColor),
+                                          style: TextStyles.medium(
+                                            14,
+                                            Colors.black,
+                                            TextDecoration.none,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -186,11 +201,10 @@ class AddressView extends StatelessWidget {
                                 controller.isEditAddress.value
                                     ? "Edit delivery address:"
                                     : "Add delivery address:",
-                                style: const TextStyle(
-                                  color: AppTheme.textColor,
-                                  fontSize: 18,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.bold,
+                                style: TextStyles.bold(
+                                  18,
+                                  Colors.black,
+                                  TextDecoration.underline,
                                 ),
                               ),
                               const SizedBox(
@@ -235,10 +249,12 @@ class AddressView extends StatelessWidget {
                                     onPressed: () {
                                       controller.deleteAddress();
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       "Delete",
-                                      style: TextStyle(
-                                        color: AppTheme.textColor,
+                                      style: TextStyles.medium(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.none,
                                       ),
                                     ),
                                   ),
@@ -262,10 +278,12 @@ class AddressView extends StatelessWidget {
                                       controller.addAddressUser();
                                     }
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     "Save",
-                                    style: TextStyle(
-                                      color: AppTheme.textColor,
+                                    style: TextStyles.medium(
+                                      14,
+                                      Colors.black,
+                                      TextDecoration.none,
                                     ),
                                   ),
                                 ),

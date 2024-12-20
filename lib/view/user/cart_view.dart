@@ -64,8 +64,15 @@ class CartView extends StatelessWidget {
               )
             : SafeArea(
                 child: controller.quantityItems.isEmpty
-                    ? const Center(
-                        child: Text("There are no items in your cart."),
+                    ? Center(
+                        child: Text(
+                          "There are no items in your cart.",
+                          style: TextStyles.bold(
+                            18,
+                            Colors.black,
+                            TextDecoration.none,
+                          ),
+                        ),
                       )
                     : ListView.builder(
                         itemCount: controller.carts.length,
@@ -82,6 +89,7 @@ class CartView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   SizedBox(
@@ -95,11 +103,14 @@ class CartView extends StatelessWidget {
                                       children: [
                                         Stack(
                                           children: [
-                                            SizedBox(
-                                              width: size.width * 0.4,
-                                              child: Image.network(
-                                                item.urlImage,
-                                                fit: BoxFit.cover,
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: SizedBox(
+                                                width: size.width * 0.4,
+                                                child: Image.network(
+                                                  item.urlImage,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
                                             if (controller.isChoose.value)
@@ -158,10 +169,10 @@ class CartView extends StatelessWidget {
                                                   maxLines: 2,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w900,
-                                                    fontSize: 16,
+                                                  style: TextStyles.bold(
+                                                    16,
+                                                    Colors.black,
+                                                    TextDecoration.none,
                                                   ),
                                                 ),
                                               ),
@@ -175,10 +186,10 @@ class CartView extends StatelessWidget {
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    color: Colors.black54,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
+                                                  style: TextStyles.medium(
+                                                    14,
+                                                    Colors.grey,
+                                                    TextDecoration.none,
                                                   ),
                                                 ),
                                               ),
@@ -188,14 +199,14 @@ class CartView extends StatelessWidget {
                                               child: SizedBox(
                                                 width: size.width * 0.35,
                                                 child: Text(
-                                                  "Unit price: 1/${item.price}đ",
+                                                  "Unit price: ${AppTheme.price(item.price)} đ",
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    color: Colors.black54,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
+                                                  style: TextStyles.medium(
+                                                    14,
+                                                    Colors.grey,
+                                                    TextDecoration.none,
                                                   ),
                                                 ),
                                               ),
@@ -215,7 +226,13 @@ class CartView extends StatelessWidget {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           Text(
-                                              "Total price : ${controller.totalPriceItems[index]}đ"),
+                                            "Total price : ${AppTheme.price(controller.totalPriceItems[index])} đ",
+                                            style: TextStyles.medium(
+                                              14,
+                                              Colors.black,
+                                              TextDecoration.none,
+                                            ),
+                                          ),
                                           Row(
                                             children: [
                                               IconButton(
@@ -229,9 +246,15 @@ class CartView extends StatelessWidget {
                                                     : null,
                                                 icon: const Icon(Icons.remove),
                                               ),
-                                              Text(controller
-                                                  .quantityItems[index]
-                                                  .toString()),
+                                              Text(
+                                                controller.quantityItems[index]
+                                                    .toString(),
+                                                style: TextStyles.medium(
+                                                  14,
+                                                  Colors.black,
+                                                  TextDecoration.none,
+                                                ),
+                                              ),
                                               IconButton(
                                                 onPressed: controller
                                                         .isSelectEdit[index]
@@ -278,8 +301,10 @@ class CartView extends StatelessWidget {
                                               controller.isSelectEdit[index]
                                                   ? "Cancel"
                                                   : "Edit",
-                                              style: const TextStyle(
-                                                color: Colors.black,
+                                              style: TextStyles.medium(
+                                                14,
+                                                Colors.black,
+                                                TextDecoration.none,
                                               ),
                                             ),
                                           ),
@@ -312,8 +337,10 @@ class CartView extends StatelessWidget {
                                               controller.isSelectEdit[index]
                                                   ? "Yes"
                                                   : "Buy",
-                                              style: const TextStyle(
-                                                color: Colors.black,
+                                              style: TextStyles.medium(
+                                                14,
+                                                Colors.black,
+                                                TextDecoration.none,
                                               ),
                                             ),
                                           ),

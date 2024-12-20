@@ -54,10 +54,11 @@ class UserDetailItemView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "đ ${controller.price}",
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontSize: 18,
+                      "${AppTheme.price(controller.price)} đ",
+                      style: TextStyles.bold(
+                        18,
+                        Colors.red,
+                        TextDecoration.none,
                       ),
                     ),
                     const SizedBox(
@@ -67,27 +68,29 @@ class UserDetailItemView extends StatelessWidget {
                       controller.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      style: TextStyles.bold(
+                        18,
+                        Colors.black,
+                        TextDecoration.none,
                       ),
                     ),
                     const Divider(
                       height: 16,
                     ),
-                    const Text(
+                    Text(
                       "Decription :",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
+                      style: TextStyles.medium(
+                        16,
+                        Colors.black,
+                        TextDecoration.none,
                       ),
                     ),
                     Text(
                       controller.description,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
+                      style: TextStyles.light(
+                        16,
+                        Colors.black,
+                        TextDecoration.none,
                       ),
                     ),
                     const Divider(
@@ -114,7 +117,7 @@ class UserDetailItemView extends StatelessWidget {
                 },
                 shape: InputBorder.none,
                 backgroundColor: Colors.blue,
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
@@ -123,8 +126,10 @@ class UserDetailItemView extends StatelessWidget {
                     ),
                     Text(
                       "Add to cart",
-                      style: TextStyle(
-                        color: Colors.white,
+                      style: TextStyles.medium(
+                        16,
+                        Colors.white,
+                        TextDecoration.none,
                       ),
                     ),
                   ],
@@ -143,16 +148,20 @@ class UserDetailItemView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Buy",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyles.medium(
+                        16,
+                        Colors.white,
+                        TextDecoration.none,
+                      ),
                     ),
                     Text(
-                      "${controller.price} đ",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.white,
+                      "${AppTheme.price(controller.price)} đ",
+                      style: TextStyles.medium(
+                        16,
+                        Colors.white,
+                        TextDecoration.none,
                       ),
                     )
                   ],

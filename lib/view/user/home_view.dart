@@ -59,7 +59,7 @@ class UserHomeView extends StatelessWidget {
                   child: Center(
                     child: IconButton(
                       onPressed: () {
-                        Get.toNamed("/user");
+                        controller.moveUser();
                       },
                       icon: const Icon(
                         Icons.settings,
@@ -92,7 +92,14 @@ class UserHomeView extends StatelessWidget {
                             return PopupMenuItem(
                               value: type.idType,
                               child: ListTile(
-                                title: Text(type.nameType),
+                                title: Text(
+                                  type.nameType,
+                                  style: TextStyles.medium(
+                                    14,
+                                    Colors.black,
+                                    TextDecoration.none,
+                                  ),
+                                ),
                               ),
                             );
                           },
@@ -119,6 +126,11 @@ class UserHomeView extends StatelessWidget {
                               child: ListTile(
                                 title: Text(
                                   controller.statusOrderData[index].toString(),
+                                  style: TextStyles.medium(
+                                    14,
+                                    Colors.black,
+                                    TextDecoration.none,
+                                  ),
                                 ),
                               ),
                             );
@@ -165,8 +177,15 @@ class _order extends StatelessWidget {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Center(
-                      child: Text("Non orders"),
+                    Center(
+                      child: Text(
+                        "Non orders",
+                        style: TextStyles.bold(
+                          16,
+                          Colors.black,
+                          TextDecoration.none,
+                        ),
+                      ),
                     ),
                     Center(
                       child: IconButton(
@@ -191,8 +210,11 @@ class _order extends StatelessWidget {
                               controller: controller.searchOrder,
                               decoration: InputDecoration(
                                 labelText: "Search",
-                                labelStyle:
-                                    const TextStyle(color: Colors.black),
+                                labelStyle: TextStyles.medium(
+                                  14,
+                                  Colors.black,
+                                  TextDecoration.none,
+                                ),
                                 suffixIcon: IconButton(
                                   onPressed: () async {
                                     await controller.getDataOrdersBySearch();
@@ -234,230 +256,253 @@ class _order extends StatelessWidget {
                           itemBuilder: (context, indexOrder) {
                             int totalAllPrice = 0;
                             int totalAllProduct = 0;
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                              width: size.width,
-                              height: size.height * 0.45,
-                              padding: AppTheme.padding16px,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.grey),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Center(
-                                    child: Text(
-                                      "Order information",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  const Divider(),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        const TextSpan(
-                                          text: "Id order:",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                            return FittedBox(
+                              fit: BoxFit.contain,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 16),
+                                width: size.width,
+                                height: size.height * 0.45,
+                                padding: AppTheme.padding16px,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        "Order information",
+                                        style: TextStyles.bold(
+                                          18,
+                                          Colors.black,
+                                          TextDecoration.none,
                                         ),
-                                        TextSpan(
-                                          text:
-                                              " ${controller.orders![indexOrder].idOrder}",
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                          ),
-                                        )
-                                      ],
-                                      style: const TextStyle(
-                                        color: Colors.black,
                                       ),
                                     ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        const TextSpan(
-                                          text: "Date:",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              " ${controller.orders![indexOrder].date}",
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                          ),
-                                        )
-                                      ],
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  const Text(
-                                    "Products:",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: AppTheme.textColor,
-                                      fontWeight: FontWeight.bold,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  const Divider(
-                                    height: 16,
-                                  ),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: List.generate(
-                                        controller
-                                            .orders![indexOrder].carts.length,
-                                        (indexCart) {
-                                          Cart cart = controller
-                                              .orders![indexOrder]
-                                              .carts[indexCart];
-                                          Item item = controller
-                                              .itemOrder[indexOrder][indexCart];
-                                          totalAllProduct += cart.quantity;
-                                          totalAllPrice += cart.totalPrice;
-                                          return Container(
-                                            height: size.height * 0.15,
-                                            width: size.width * 0.8,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  width: size.width * 0.35,
-                                                  height: size.height * 0.15,
-                                                  child: Image.network(
-                                                    item.urlImage,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 8,
-                                                ),
-                                                Container(
-                                                  width: size.width * 0.42,
-                                                  height: size.height * 0.15,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        item.title,
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment:
-                                                            Alignment.topRight,
-                                                        child: Text(
-                                                          "x ${cart.quantity}",
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const Divider(),
-                                                      Text(
-                                                        "Total price : ${cart.totalPrice}đ",
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: const TextStyle(
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  const Divider(),
-                                  Text(
-                                    "Total price all product( $totalAllProduct): $totalAllPriceđ",
-                                    style: const TextStyle(
-                                      color: AppTheme.textColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text.rich(
+                                    const Divider(),
+                                    Text.rich(
                                       TextSpan(
                                         children: [
-                                          const TextSpan(
-                                            text: "Message for shop:",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              decoration:
-                                                  TextDecoration.underline,
+                                          TextSpan(
+                                            text: "Id order:",
+                                            style: TextStyles.bold(
+                                              16,
+                                              Colors.black,
+                                              TextDecoration.underline,
                                             ),
                                           ),
                                           TextSpan(
-                                            text: controller.orders![indexOrder]
-                                                        .message ==
-                                                    ""
-                                                ? " Non message for shop"
-                                                : " ${controller.orders![indexOrder].message}",
-                                          ),
+                                            text:
+                                                " ${controller.orders![indexOrder].idOrder}",
+                                            style: TextStyles.light(
+                                              16,
+                                              Colors.black,
+                                              TextDecoration.none,
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Text(
-                                      "Order status : ${controller.statusOrders[indexOrder]}",
-                                      style: TextStyle(
-                                        color: controller.orders![indexOrder]
-                                                    .status ==
-                                                1
-                                            ? Colors.green
-                                            : Colors.grey,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: "Date:",
+                                            style: TextStyles.bold(
+                                              16,
+                                              Colors.black,
+                                              TextDecoration.underline,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                " ${controller.orders![indexOrder].date}",
+                                            style: TextStyles.light(
+                                              16,
+                                              Colors.black,
+                                              TextDecoration.none,
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
-                                  )
-                                ],
+                                    Text(
+                                      "Products:",
+                                      style: TextStyles.bold(
+                                        16,
+                                        Colors.black,
+                                        TextDecoration.underline,
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 16,
+                                    ),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: List.generate(
+                                          controller
+                                              .orders![indexOrder].carts.length,
+                                          (indexCart) {
+                                            Cart cart = controller
+                                                .orders![indexOrder]
+                                                .carts[indexCart];
+                                            Item item =
+                                                controller.itemOrder[indexOrder]
+                                                    [indexCart];
+                                            totalAllProduct += cart.quantity;
+                                            totalAllPrice += cart.totalPrice;
+                                            return SizedBox(
+                                              height: size.height * 0.15,
+                                              width: size.width * 0.8,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    width: size.width * 0.35,
+                                                    height: size.height * 0.15,
+                                                    child: Image.network(
+                                                      item.urlImage,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  SizedBox(
+                                                    width: size.width * 0.42,
+                                                    height: size.height * 0.15,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          item.title,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style:
+                                                              TextStyles.black(
+                                                            16,
+                                                            Colors.black,
+                                                            TextDecoration.none,
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          child: FittedBox(
+                                                            fit: BoxFit.contain,
+                                                            child: Text(
+                                                              "x ${cart.quantity}",
+                                                              style: TextStyles
+                                                                  .bold(
+                                                                14,
+                                                                Colors.grey,
+                                                                TextDecoration
+                                                                    .none,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const Divider(),
+                                                        FittedBox(
+                                                          fit: BoxFit.contain,
+                                                          child: Text(
+                                                            "Total price : ${AppTheme.price(cart.totalPrice)}đ",
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style:
+                                                                TextStyles.bold(
+                                                              14,
+                                                              Colors.grey,
+                                                              TextDecoration
+                                                                  .none,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const Divider(),
+                                    FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        "Total price all product( $totalAllProduct): ${AppTheme.price(totalAllPrice)} đ",
+                                        style: TextStyles.bold(
+                                          16,
+                                          Colors.black,
+                                          TextDecoration.none,
+                                        ),
+                                      ),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: "Message for shop:",
+                                              style: TextStyles.bold(
+                                                16,
+                                                Colors.black,
+                                                TextDecoration.underline,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: controller
+                                                          .orders![indexOrder]
+                                                          .message ==
+                                                      ""
+                                                  ? " Non message for shop"
+                                                  : " ${controller.orders![indexOrder].message}",
+                                              style: TextStyles.light(
+                                                16,
+                                                Colors.black,
+                                                TextDecoration.none,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          "Order status : ${controller.statusOrders[indexOrder]}",
+                                          style: TextStyle(
+                                            fontFamily: "Inter",
+                                            color: controller
+                                                        .orders![indexOrder]
+                                                        .status ==
+                                                    1
+                                                ? Colors.green
+                                                : Colors.grey,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           }),
@@ -529,8 +574,12 @@ class _home extends StatelessWidget {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Center(
-                      child: Text("Non products"),
+                    Center(
+                      child: Text(
+                        "Non products",
+                        style: TextStyles.black(
+                            18, Colors.black, TextDecoration.none),
+                      ),
                     ),
                     Center(
                       child: IconButton(
@@ -552,7 +601,11 @@ class _home extends StatelessWidget {
                         controller: controller.searchItem,
                         decoration: InputDecoration(
                           labelText: "Search",
-                          labelStyle: const TextStyle(color: Colors.black),
+                          labelStyle: TextStyles.medium(
+                            16,
+                            Colors.black,
+                            TextDecoration.none,
+                          ),
                           suffixIcon: IconButton(
                             onPressed: () {
                               controller.getDataItemsBySearch();
@@ -660,12 +713,10 @@ class _productWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${item.price} đ",
+                    "${AppTheme.price(item.price)} đ",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.red,
-                    ),
+                    style: TextStyles.bold(14, Colors.red, TextDecoration.none),
                   ),
                 ],
               ),
@@ -678,8 +729,7 @@ class _productWidget extends StatelessWidget {
                 item.title,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
-                style: const TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyles.bold(14, Colors.black, TextDecoration.none),
               ),
             ),
             const Spacer(),
@@ -692,10 +742,8 @@ class _productWidget extends StatelessWidget {
                 child: Text(
                   "Type : $type",
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style:
+                      TextStyles.medium(14, Colors.black, TextDecoration.none),
                 ),
               ),
             ),

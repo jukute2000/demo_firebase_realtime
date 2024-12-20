@@ -13,6 +13,11 @@ class UserView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.primaryColor,
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            Get.back(result: true);
+          },
+        ),
         backgroundColor: AppTheme.primaryColor,
       ),
       body: Obx(
@@ -45,7 +50,8 @@ class UserView extends StatelessWidget {
                                   image: DecorationImage(
                                     image: controller.user.image == ""
                                         ? const AssetImage(
-                                            "assets/images/user-default.png")
+                                            "assets/images/user-default.png",
+                                          )
                                         : NetworkImage(
                                             controller.user.image,
                                           ),
@@ -124,19 +130,21 @@ class UserView extends StatelessWidget {
                           onPressed: () {
                             controller.logout();
                           },
-                          icon: const Row(
+                          icon: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
                                 "Logout",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                style: TextStyles.bold(
+                                  16,
+                                  Colors.black,
+                                  TextDecoration.none,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 8,
                               ),
-                              Icon(
+                              const Icon(
                                 Icons.logout,
                                 color: Colors.black,
                               ),
@@ -164,13 +172,13 @@ class UserView extends StatelessWidget {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                const Center(
+                                Center(
                                   child: Text(
                                     "Change Name",
-                                    style: TextStyle(
-                                      color: AppTheme.textColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                    style: TextStyles.bold(
+                                      18,
+                                      Colors.black,
+                                      TextDecoration.none,
                                     ),
                                   ),
                                 ),
@@ -199,10 +207,12 @@ class UserView extends StatelessWidget {
                                     onPressed: () {
                                       controller.changeName();
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       "Save",
-                                      style: TextStyle(
-                                        color: AppTheme.textColor,
+                                      style: TextStyles.medium(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.none,
                                       ),
                                     ),
                                   ),
@@ -234,13 +244,13 @@ class UserView extends StatelessWidget {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                const Center(
+                                Center(
                                   child: Text(
                                     "Change Password",
-                                    style: TextStyle(
-                                      color: AppTheme.textColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                    style: TextStyles.bold(
+                                      18,
+                                      Colors.black,
+                                      TextDecoration.none,
                                     ),
                                   ),
                                 ),
@@ -293,10 +303,12 @@ class UserView extends StatelessWidget {
                                     onPressed: () {
                                       controller.changePassword();
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       "Save",
-                                      style: TextStyle(
-                                        color: AppTheme.textColor,
+                                      style: TextStyles.medium(
+                                        14,
+                                        Colors.black,
+                                        TextDecoration.none,
                                       ),
                                     ),
                                   ),
@@ -427,8 +439,13 @@ class _textButtonWidget extends StatelessWidget {
             fit: FlexFit.tight,
             flex: 14,
             child: Text(
-              "$type: ${detailType}",
+              "$type: $detailType",
               overflow: TextOverflow.ellipsis,
+              style: TextStyles.medium(
+                14,
+                Colors.black,
+                TextDecoration.none,
+              ),
             ),
           ),
           const Spacer(),
@@ -442,16 +459,18 @@ class _textButtonWidget extends StatelessWidget {
                 onPressed: () {
                   controller.chooseSetUp(type);
                 },
-                icon: const Row(
+                icon: Row(
                   children: [
                     Text(
                       "Set up now",
-                      style: TextStyle(
-                        color: Colors.green,
+                      style: TextStyles.medium(
+                        16,
+                        Colors.green,
+                        TextDecoration.none,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Icon(
+                    const SizedBox(width: 8),
+                    const Icon(
                       Icons.arrow_forward_ios_outlined,
                       color: Colors.green,
                     ),
@@ -501,6 +520,11 @@ class _addressButtonWidget extends StatelessWidget {
               children: [
                 Text(
                   "$type:",
+                  style: TextStyles.medium(
+                    14,
+                    Colors.black,
+                    TextDecoration.none,
+                  ),
                 ),
                 const SizedBox(
                   height: 8,
@@ -520,11 +544,21 @@ class _addressButtonWidget extends StatelessWidget {
                               "${controller.address?.name} | ${controller.address?.phone}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              style: TextStyles.medium(
+                                14,
+                                Colors.black,
+                                TextDecoration.none,
+                              ),
                             ),
                             Text(
                               controller.address?.address ?? "",
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
+                              style: TextStyles.light(
+                                14,
+                                Colors.black,
+                                TextDecoration.none,
+                              ),
                             ),
                           ],
                         ),
@@ -543,16 +577,18 @@ class _addressButtonWidget extends StatelessWidget {
                 onPressed: () {
                   controller.chooseSetUp(type);
                 },
-                icon: const Row(
+                icon: Row(
                   children: [
                     Text(
                       "Set up now",
-                      style: TextStyle(
-                        color: Colors.green,
+                      style: TextStyles.medium(
+                        14,
+                        Colors.green,
+                        TextDecoration.none,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Icon(
+                    const SizedBox(width: 8),
+                    const Icon(
                       Icons.arrow_forward_ios_outlined,
                       color: Colors.green,
                     ),

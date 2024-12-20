@@ -7,10 +7,10 @@ import 'package:demo_firebase_realtime/services/type_firebase.dart';
 import 'package:demo_firebase_realtime/widgets/snackbar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../../models/cart_model.dart';
 import '../../models/type_item_model.dart';
+import '../../untils/app_theme.dart';
 
 class AuthorHomeController extends GetxController {
   final ItemFirebase _itemFirebase = ItemFirebase();
@@ -37,6 +37,11 @@ class AuthorHomeController extends GetxController {
   List<List<Item>> itemOrder = [];
   RxList<int> listStatusOrders = <int>[].obs;
   Map<int, String> statusData = {
+    1: "Store is processing",
+    2: "Order completed"
+  };
+  Map<int, String> filterStatusOrderData = {
+    0: "All",
     1: "Store is processing",
     2: "Order completed"
   };
@@ -116,28 +121,48 @@ class AuthorHomeController extends GetxController {
   Future<void> getDiablog(String id, String tagImage) async {
     Get.defaultDialog(
       title: "Confirm delete product",
-      content: const Column(
+      titleStyle: TextStyles.bold(16, Colors.black, TextDecoration.none),
+      content: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [Center(child: Text("Do you have to delete a product?"))],
+        children: [
+          Center(
+            child: Text(
+              "Do you have to delete a product?",
+              style: TextStyles.medium(
+                14,
+                Colors.black,
+                TextDecoration.none,
+              ),
+            ),
+          )
+        ],
       ),
       confirm: TextButton(
         onPressed: () async {
           Get.back();
           await deleteItem(id, tagImage);
         },
-        child: const Text(
+        child: Text(
           "Confirm",
-          style: TextStyle(color: Colors.green),
+          style: TextStyles.medium(
+            14,
+            Colors.green,
+            TextDecoration.none,
+          ),
         ),
       ),
       cancel: TextButton(
         onPressed: () {
           Get.back();
         },
-        child: const Text(
+        child: Text(
           "Cancel",
-          style: TextStyle(color: Colors.red),
+          style: TextStyles.medium(
+            14,
+            Colors.red,
+            TextDecoration.none,
+          ),
         ),
       ),
     );
@@ -218,6 +243,62 @@ class AuthorHomeController extends GetxController {
     isLoading.value = false;
   }
 
+  Future<bool> getItemOrder() async {
+    List<String> orderHasProductNull = [];
+    for (var order in orders) {
+      for (var cart in order.carts) {
+        Item? item = await _itemFirebase.getItemById(cart.idItem);
+        if (item == null) {
+          orderHasProductNull.add(order.idOrder);
+          break;
+        }
+      }
+    }
+    if (orderHasProductNull.isEmpty) {
+      for (var e in orderHasProductNull) {
+        _orderFirebase.deleteOrderAdminById(e);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> getDataOrdersByStatus({required int value}) async {
+    if (value == 0) {
+      getAllOrder();
+    } else {
+      isLoading.value = true;
+      orders = await _orderFirebase.getOrdersAdminByStatus(value);
+      itemOrder.clear();
+      statusOrders.clear();
+      listStatusOrders.clear();
+      isOrdersNull.value = orders.isEmpty;
+      if (!isOrdersNull.value) {
+        bool isOrderHasProductNull = await getItemOrder();
+        if (!isOrderHasProductNull) {
+          orders = await _orderFirebase.getAllOrders();
+        }
+        for (var order in orders) {
+          List<Item> tmp = [];
+          for (var cart in order.carts) {
+            Item? item = await _itemFirebase.getItemById(cart.idItem);
+            if (item != null) {
+              tmp.add(item);
+            }
+          }
+          if (order.status == 1) {
+            statusOrders.add("Store is processing");
+          } else if (order.status == 2) {
+            statusOrders.add("Order completed");
+          }
+          listStatusOrders.add(order.status);
+          itemOrder.add(tmp);
+        }
+      }
+      isLoading.value = false;
+    }
+  }
+
   Future<void> getOrderByDate(BuildContext context, width, height) async {
     List<DateTime?>? listDate = await showCalendarDatePicker2Dialog(
       context: context,
@@ -236,7 +317,6 @@ class AuthorHomeController extends GetxController {
       itemOrder.clear();
       listStatusOrders.clear();
       orders = await _orderFirebase.getOrderByDate(listDate);
-      print(orders.length);
       if (orders.isNotEmpty) {
         isOrdersNull.value = false;
       } else {

@@ -113,16 +113,25 @@ class AuthorAddEditItemView extends StatelessWidget {
                           maxLength: 9,
                           maxLines: 1,
                           style: const TextStyle(color: Colors.red),
-                          decoration: const InputDecoration(
-                            focusedBorder: OutlineInputBorder(
+                          decoration: InputDecoration(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red,
                               ),
                             ),
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                             hintText: "Price:",
-                            hintStyle: TextStyle(color: Colors.red),
+                            hintStyle: TextStyles.medium(
+                              16,
+                              Colors.red,
+                              TextDecoration.none,
+                            ),
                             prefixText: "đ ",
+                            prefixStyle: TextStyles.medium(
+                              16,
+                              Colors.red,
+                              TextDecoration.none,
+                            ),
                           ),
                         ),
                       ),
@@ -139,28 +148,33 @@ class AuthorAddEditItemView extends StatelessWidget {
                             fontSize: 18,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          decoration: const InputDecoration(
-                            focusedBorder: OutlineInputBorder(
+                          decoration: InputDecoration(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.black,
                               ),
                             ),
                             hintText: "Title:",
-                            border: OutlineInputBorder(),
+                            hintStyle: TextStyles.medium(
+                              16,
+                              Colors.black,
+                              TextDecoration.none,
+                            ),
+                            border: const OutlineInputBorder(),
                           ),
                         ),
                       ),
                       const SizedBox(
                         height: 8,
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Type product:",
-                          style: TextStyle(
-                            color: AppTheme.textColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          style: TextStyles.bold(
+                            16,
+                            Colors.black,
+                            TextDecoration.none,
                           ),
                         ),
                       ),
@@ -179,6 +193,11 @@ class AuthorAddEditItemView extends StatelessWidget {
                                 value: index,
                                 child: Text(
                                   controller.typeData[index].values.single,
+                                  style: TextStyles.medium(
+                                    16,
+                                    Colors.black,
+                                    TextDecoration.none,
+                                  ),
                                 ),
                               ),
                             ),
@@ -197,12 +216,12 @@ class AuthorAddEditItemView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Product description:",
-                              style: TextStyle(
-                                color: AppTheme.textColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              style: TextStyles.bold(
+                                16,
+                                Colors.black,
+                                TextDecoration.none,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -212,14 +231,19 @@ class AuthorAddEditItemView extends StatelessWidget {
                               keyboardType: TextInputType.multiline,
                               maxLines: 5,
                               maxLength: 500,
-                              decoration: const InputDecoration(
-                                focusedBorder: OutlineInputBorder(
+                              decoration: InputDecoration(
+                                focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.black,
                                   ),
                                 ),
                                 hintText: "Description:",
-                                border: OutlineInputBorder(),
+                                hintStyle: TextStyles.medium(
+                                  16,
+                                  Colors.black,
+                                  TextDecoration.none,
+                                ),
+                                border: const OutlineInputBorder(),
                               ),
                             ),
                           ],
@@ -228,14 +252,14 @@ class AuthorAddEditItemView extends StatelessWidget {
                       const Divider(
                         color: Colors.grey,
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Status product:",
-                          style: TextStyle(
-                            color: AppTheme.textColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          style: TextStyles.bold(
+                            16,
+                            Colors.black,
+                            TextDecoration.none,
                           ),
                         ),
                       ),
@@ -246,13 +270,28 @@ class AuthorAddEditItemView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             isExpanded: true,
                             value: controller.status.value,
-                            hint: const Text("Status :"),
+                            hint: Text(
+                              "Status :",
+                              style: TextStyles.medium(
+                                16,
+                                Colors.black,
+                                TextDecoration.none,
+                              ),
+                            ),
                             dropdownColor: Colors.white,
                             items: List.generate(
                               2,
                               (index) => DropdownMenuItem(
-                                  value: index,
-                                  child: Text(controller.statusData[index]!)),
+                                value: index,
+                                child: Text(
+                                  controller.statusData[index]!,
+                                  style: TextStyles.medium(
+                                    16,
+                                    Colors.black,
+                                    TextDecoration.none,
+                                  ),
+                                ),
+                              ),
                             ),
                             onChanged: (value) {
                               controller.status.value = value!;

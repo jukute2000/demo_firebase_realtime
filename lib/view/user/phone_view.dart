@@ -17,7 +17,14 @@ class PhoneView extends StatelessWidget {
           onPressed: () => Get.back(result: false),
         ),
         backgroundColor: AppTheme.primaryColor,
-        title: const Text("Phone"),
+        title: Text(
+          "Phone",
+          style: TextStyles.bold(
+            18,
+            Colors.black,
+            TextDecoration.none,
+          ),
+        ),
         centerTitle: true,
       ),
       body: Stack(
@@ -95,10 +102,13 @@ class PhoneView extends StatelessWidget {
                                       onPressed: () async {
                                         await controller.receiveOTP();
                                       },
-                                      child: const Text(
+                                      child: Text(
                                         "Receive OTP",
-                                        style: TextStyle(
-                                            color: AppTheme.textColor),
+                                        style: TextStyles.medium(
+                                          14,
+                                          Colors.black,
+                                          TextDecoration.none,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -137,9 +147,13 @@ class PhoneView extends StatelessWidget {
                                 width: size.width * 0.9,
                                 child: FloatingActionButton(
                                   backgroundColor: Colors.white,
-                                  child: const Text(
+                                  child: Text(
                                     "Save",
-                                    style: TextStyle(color: AppTheme.textColor),
+                                    style: TextStyles.medium(
+                                      14,
+                                      Colors.black,
+                                      TextDecoration.none,
+                                    ),
                                   ),
                                   onPressed: () {
                                     controller.updatePhone();
