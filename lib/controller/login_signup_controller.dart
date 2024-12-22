@@ -1,5 +1,8 @@
 import 'package:demo_firebase_realtime/services/auth_firebase.dart';
 import 'package:demo_firebase_realtime/widgets/snackbar_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +13,7 @@ class LoginSignupController extends GetxController {
   TextEditingController gmail = TextEditingController();
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController emailForgetPassword = TextEditingController();
   RxBool isOpcusPassword = true.obs;
   bool? isUserNotNull;
   RxBool isLoading = true.obs;
@@ -17,6 +21,12 @@ class LoginSignupController extends GetxController {
   RxBool isOpcusRePassword = true.obs;
   RxBool isPolicy = false.obs;
   bool isSupportFingerprint = false;
+  RxBool isForgetPassword = false.obs;
+
+  void changeIsForgetPassword(bool isClear) {
+    isForgetPassword.value = !isForgetPassword.value;
+    if (isClear) emailForgetPassword.clear();
+  }
 
   @override
   Future<void> onInit() async {
@@ -51,9 +61,11 @@ class LoginSignupController extends GetxController {
   }
 
   Future<void> loginFingerPrint() async {
-    bool isSuccess = await _auth.checkFingerprint();
-    if (isSuccess) {
+    String isSuccess = await _auth.checkFingerprint();
+    if (isSuccess == "Success") {
       Get.offAndToNamed("userHome");
+    } else if (isSuccess == "Email Not Verified") {
+      await emailNotVerifiled();
     } else {
       Get.showSnackbar(
         SnackbarWidget.snackBarWidget(
@@ -65,11 +77,44 @@ class LoginSignupController extends GetxController {
     }
   }
 
+  Future<void> emailNotVerifiled() async {
+    Get.showSnackbar(
+      SnackbarWidget.snackBarWidget(
+        title: "Fail",
+        message: "Email not verifiled and send email verifiled",
+        isSuccess: false,
+      ),
+    );
+    await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+  }
+
   void resetTextEdit() {
     gmail.clear();
     username.clear();
     password.clear();
     rePassword.clear();
+  }
+
+  Future<void> forgetPassword() async {
+    Get.showSnackbar(
+      SnackbarWidget.snackBarWidget(
+        title: "Success",
+        message: "Reset password sent ${emailForgetPassword.text}",
+        isSuccess: true,
+      ),
+    );
+    changeIsForgetPassword(false);
+    String isSuccess = await _auth.forgetPassword(emailForgetPassword.text);
+    if (isSuccess != "Success") {
+      Get.showSnackbar(
+        SnackbarWidget.snackBarWidget(
+          title: "Fail",
+          message: isSuccess,
+          isSuccess: false,
+        ),
+      );
+    }
+    emailForgetPassword.clear();
   }
 
   Future<void> onSubmitLogin() async {
@@ -90,6 +135,8 @@ class LoginSignupController extends GetxController {
           isSuccess: true,
         );
         Get.offAndToNamed("/userHome");
+      } else if (message == "Email Not Verified") {
+        await emailNotVerifiled();
       } else {
         Get.showSnackbar(
           SnackbarWidget.snackBarWidget(
@@ -114,7 +161,9 @@ class LoginSignupController extends GetxController {
             isSuccess: true,
           ),
         );
-        Get.offAndToNamed("/authorHome");
+        await emailNotVerifiled();
+      } else if (message == "Email Not Verifiled") {
+        await emailNotVerifiled();
       } else {
         Get.showSnackbar(
           SnackbarWidget.snackBarWidget(

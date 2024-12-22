@@ -278,8 +278,8 @@ class LoginSignupView extends StatelessWidget {
                                 controller.isUserNotNull! &&
                                 controller.isSupportFingerprint)
                               IconButton(
-                                onPressed: () {
-                                  controller.loginFingerPrint();
+                                onPressed: () async {
+                                  await controller.loginFingerPrint();
                                 },
                                 icon: SizedBox(
                                   width: size.width * 0.1,
@@ -294,7 +294,9 @@ class LoginSignupView extends StatelessWidget {
                               ),
                             if (controller.isPageLogin.value)
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  controller.changeIsForgetPassword(true);
+                                },
                                 child: Text(
                                   "Forgot Password?",
                                   style: TextStyles.medium(
@@ -340,6 +342,94 @@ class LoginSignupView extends StatelessWidget {
                       ),
                     ),
                   ),
+          ),
+          Obx(
+            () => controller.isForgetPassword.value
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      margin: AppTheme.padding8px,
+                      width: size.width,
+                      height: size.height * 0.55,
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Forget Password",
+                                style: TextStyles.medium(
+                                  18,
+                                  Colors.black,
+                                  TextDecoration.none,
+                                ),
+                              ),
+                              SizedBox(
+                                height: size.height * 0.05,
+                              ),
+                              Padding(
+                                padding: AppTheme.padding16px,
+                                child: TextField(
+                                  controller: controller.emailForgetPassword,
+                                  keyboardType: TextInputType.emailAddress,
+                                  cursorColor: Colors.grey,
+                                  decoration: InputDecoration(
+                                    labelText: "Email Foget Password:",
+                                    labelStyle: TextStyles.medium(
+                                      16,
+                                      Colors.grey,
+                                      TextDecoration.none,
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: size.height * 0.05,
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  controller.forgetPassword();
+                                },
+                                child: Text(
+                                  "Enter",
+                                  style: TextStyles.bold(
+                                    16,
+                                    Colors.green,
+                                    TextDecoration.none,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: IconButton(
+                              onPressed: () =>
+                                  controller.changeIsForgetPassword(true),
+                              icon: const Icon(Icons.arrow_back),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
           )
         ],
       ),

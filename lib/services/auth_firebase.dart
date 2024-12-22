@@ -23,7 +23,8 @@ class AuthFirebase {
         email: email,
         password: password,
       );
-      await _auth.currentUser!.updateDisplayName("name");
+      await _auth.currentUser!.updateDisplayName(name);
+      await _auth.currentUser!.sendEmailVerification();
       return "Success";
     } on FirebaseAuthException catch (e) {
       return e.message!;
@@ -35,7 +36,7 @@ class AuthFirebase {
     return isSupport;
   }
 
-  Future<bool> checkFingerprint() async {
+  Future<String> checkFingerprint() async {
     bool isAuthenticated = false;
     try {
       isAuthenticated = await auth.authenticate(
@@ -48,7 +49,9 @@ class AuthFirebase {
     } catch (e) {
       print(e);
     }
-    return isAuthenticated;
+    return isAuthenticated && _auth.currentUser!.emailVerified
+        ? "Success"
+        : "Email Not Verified";
   }
 
   Future<String> uploadAvatar(String idUser, File imageFile) async {
@@ -74,8 +77,10 @@ class AuthFirebase {
 
   Future<String> loginAccount(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return "Success";
+      UserCredential user = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      bool isEmailVerifield = user.user!.emailVerified;
+      return isEmailVerifield ? "Success" : "Email Not Verified";
     } on FirebaseAuthException catch (e) {
       return "${e.message}";
     }
@@ -102,9 +107,27 @@ class AuthFirebase {
   Future<bool> checkUserNotNull() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      return true;
+      bool isEmailVerified = user.emailVerified;
+      return isEmailVerified;
     }
     return false;
+  }
+
+  Future<String> forgetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return "Success";
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return 'No user found with this email.';
+      } else if (e.code == 'invalid-email') {
+        return 'The email address is not valid.';
+      } else {
+        return 'An error occurred. Please try again.';
+      }
+    } catch (e) {
+      return 'An error occurred. Please try again.';
+    }
   }
 
   Future<Auth> getUser() async {

@@ -231,7 +231,7 @@ class AddressView extends StatelessWidget {
                               TextEditWidget(
                                 controller: controller.address,
                                 labelText: "Recipient's address:",
-                                textInputType: TextInputType.phone,
+                                textInputType: TextInputType.streetAddress,
                                 isAdress: true,
                               ),
                               const SizedBox(
