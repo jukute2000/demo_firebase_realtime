@@ -184,7 +184,7 @@ class TypeProductWidget extends StatelessWidget {
               : Visibility(
                   visible: controller.isLoading.value,
                   replacement: RefreshIndicator(
-                    onRefresh: () => controller.getTypeData(),
+                    onRefresh: () => controller.getTypeData(true),
                     child: Padding(
                         padding: AppTheme.padding16px,
                         child: ListView.builder(
@@ -777,8 +777,11 @@ class _homeState extends State<HomeWidget> {
                   ),
                   Center(
                     child: IconButton(
-                      onPressed: () {
-                        widget.controller.getProductData();
+                      onPressed: () async {
+                        widget.controller.isLoading.value = true;
+                        await widget.controller.getItemData(false);
+                        await widget.controller.getTypeData(false);
+                        widget.controller.isLoading.value = false;
                       },
                       icon: const Icon(Icons.refresh),
                     ),
@@ -788,7 +791,12 @@ class _homeState extends State<HomeWidget> {
             : Visibility(
                 visible: widget.controller.isLoading.value,
                 replacement: RefreshIndicator(
-                  onRefresh: () => widget.controller.getProductData(),
+                  onRefresh: () async {
+                    widget.controller.isLoading.value = true;
+                    await widget.controller.getItemData(false);
+                    await widget.controller.getTypeData(false);
+                    widget.controller.isLoading.value = false;
+                  },
                   child: Column(
                     children: [
                       Container(
@@ -1007,7 +1015,7 @@ class ProductWidget extends StatelessWidget {
                           "status": item.status,
                         })?.then(
                           (value) {
-                            controller.getDataProductAndType();
+                            controller.getItemData(true);
                           },
                         );
                       },

@@ -71,7 +71,7 @@ class AuthorHomeController extends GetxController {
     isLoading.value = true;
     await _typeFirebase.editType(idTypeEdit, type.text, statusTypeSelect.value);
     canelAddOrEditType();
-    await getTypeData();
+    await getTypeData(false);
     isLoading.value = false;
   }
 
@@ -95,9 +95,7 @@ class AuthorHomeController extends GetxController {
             ),
           );
           canelAddOrEditType();
-          isLoading.value = true;
-          await getTypeData();
-          isLoading.value = false;
+          await getTypeData(true);
         },
       );
     }
@@ -110,7 +108,7 @@ class AuthorHomeController extends GetxController {
       })!
           .then(
         (value) async {
-          await getItemData();
+          await getItemData(true);
         },
       );
     } else {
@@ -171,27 +169,19 @@ class AuthorHomeController extends GetxController {
   Future<void> deleteItem(String id, String tagImage) async {
     isLoading.value = true;
     await _itemFirebase.deleteItem(id, tagImage);
-    await getItemData();
+    await getItemData(false);
     isLoading.value = false;
   }
 
   Future<void> choosePage(int value) async {
     selectPage.value = value;
     if (value == 0) {
-      await getItemData();
+      await getItemData(true);
     } else if (value == 1) {
       await getAllOrder();
     } else {
-      isLoading.value = true;
-      await getTypeData();
-      isLoading.value = false;
+      await getTypeData(true);
     }
-  }
-
-  Future<void> getProductData() async {
-    isLoading.value = true;
-    await getItemData();
-    isLoading.value = false;
   }
 
   Future<void> logout() async {
@@ -199,16 +189,19 @@ class AuthorHomeController extends GetxController {
     Get.offAndToNamed("/loginSignup");
   }
 
-  Future<void> getTypeData() async {
+  Future<void> getTypeData(bool isLoadingEnable) async {
+    if (isLoadingEnable) isLoading.value = true;
     types.clear();
     isTypeProductNull.value = true;
     types = await _typeFirebase.getAllType();
     if (types.isNotEmpty) {
       isTypeProductNull.value = false;
     }
+    if (isLoadingEnable) isLoading.value = false;
   }
 
-  Future<void> getItemData() async {
+  Future<void> getItemData(bool isLoadingEnable) async {
+    if (isLoadingEnable) isLoading.value = true;
     items = await _itemFirebase.fetchItems(false);
     typesProduct.clear();
     for (var item in items) {
@@ -217,6 +210,7 @@ class AuthorHomeController extends GetxController {
     }
     searchProduct.clear();
     isItemsEmpty.value = items.isEmpty;
+    if (isLoadingEnable) isLoading.value = false;
   }
 
   Future<void> getItemDataByIdType(String idType) async {
@@ -419,16 +413,12 @@ class AuthorHomeController extends GetxController {
     );
   }
 
-  Future<void> getDataProductAndType() async {
-    isLoading.value = true;
-    await getItemData();
-    await getTypeData();
-    isLoading.value = false;
-  }
-
   @override
   Future<void> onInit() async {
     super.onInit();
-    getDataProductAndType();
+    isLoading.value = true;
+    await getItemData(false);
+    await getTypeData(false);
+    isLoading.value = false;
   }
 }
