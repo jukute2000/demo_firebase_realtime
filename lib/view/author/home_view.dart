@@ -402,7 +402,7 @@ class OrderWidget extends StatelessWidget {
         () => Visibility(
           visible: controller.isLoading.value,
           replacement: RefreshIndicator(
-            onRefresh: () => controller.getAllOrder(),
+            onRefresh: () => controller.getAllOrder(true),
             child: controller.isOrdersNull.value
                 ? Center(
                     child: Text(

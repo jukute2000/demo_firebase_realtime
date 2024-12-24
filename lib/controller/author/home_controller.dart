@@ -8,6 +8,7 @@ import 'package:demo_firebase_realtime/widgets/snackbar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../models/cart_model.dart';
 import '../../models/type_item_model.dart';
 import '../../untils/app_theme.dart';
@@ -40,10 +41,13 @@ class AuthorHomeController extends GetxController {
     1: "Store is processing",
     2: "Order completed"
   };
+
   Map<int, String> filterStatusOrderData = {
     0: "All",
     1: "Store is processing",
-    2: "Order completed"
+    2: "Order completed",
+    3: "Sort by most recent",
+    4: "Sort by oldest",
   };
   RxInt statusTypeSelect = 0.obs;
   Map<int, String> statusTypeData = {0: "Lock", 1: "Open"};
@@ -178,7 +182,7 @@ class AuthorHomeController extends GetxController {
     if (value == 0) {
       await getItemData(true);
     } else if (value == 1) {
-      await getAllOrder();
+      await getAllOrder(true);
     } else {
       await getTypeData(true);
     }
@@ -258,8 +262,10 @@ class AuthorHomeController extends GetxController {
   }
 
   Future<void> getDataOrdersByStatus({required int value}) async {
-    if (value == 0) {
-      getAllOrder();
+    if (value == 0 || value == 3) {
+      await getAllOrder(true);
+    } else if (value == 4) {
+      await getAllOrder(false);
     } else {
       isLoading.value = true;
       orders = await _orderFirebase.getOrdersAdminByStatus(value);
@@ -365,7 +371,7 @@ class AuthorHomeController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> getAllOrder() async {
+  Future<void> getAllOrder(bool isSortByMostRecent) async {
     isLoading.value = true;
     isSearchOrder.value = false;
     searchOrder.text = "";
@@ -378,6 +384,15 @@ class AuthorHomeController extends GetxController {
       isOrdersNull.value = true;
     }
     if (!isOrdersNull.value) {
+      if (isSortByMostRecent) {
+        orders.sort(
+          (a, b) => formatDate(b.date).compareTo(formatDate(a.date)),
+        );
+      } else {
+        orders.sort(
+          (a, b) => formatDate(a.date).compareTo(formatDate(b.date)),
+        );
+      }
       bool isOrderHasProductNotNull = await getItemOrder();
       if (isOrderHasProductNotNull) {
         orders = await _orderFirebase.getAllOrders();
@@ -408,10 +423,13 @@ class AuthorHomeController extends GetxController {
         .editOrderStatus(idOrder, date, carts, status, message)
         .then(
       (value) async {
-        await getAllOrder();
+        await getAllOrder(true);
       },
     );
   }
+
+  DateTime formatDate(String date) =>
+      DateFormat("HH:mm dd-MM-yyyy").parse(date);
 
   @override
   Future<void> onInit() async {

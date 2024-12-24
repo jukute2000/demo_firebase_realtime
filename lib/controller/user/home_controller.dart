@@ -7,6 +7,7 @@ import 'package:demo_firebase_realtime/services/order_firebase.dart';
 import 'package:demo_firebase_realtime/services/type_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../models/item_model.dart';
 import '../../models/order_model.dart';
 
@@ -178,6 +179,9 @@ class UserHomeController extends GetxController {
     searchOrder.clear();
     isOrdersNull.value = orders!.isEmpty;
     if (!isOrdersNull.value) {
+      orders!.sort(
+        (a, b) => formatDate(b.date).compareTo(formatDate(a.date)),
+      );
       bool isOrderHasProductNull = await getItemOrder();
       if (!isOrderHasProductNull) {
         orders = await _orderFirebase.getOrders(user.getId!);
@@ -274,6 +278,9 @@ class UserHomeController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  DateTime formatDate(String date) =>
+      DateFormat("HH:mm dd-MM-yyyy").parse(date);
 
   Future<void> choosePage(int selectPage) async {
     pageSelect.value = selectPage;
