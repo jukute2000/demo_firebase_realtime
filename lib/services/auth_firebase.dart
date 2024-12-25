@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
@@ -16,31 +15,44 @@ class AuthFirebase {
   final LocalAuthentication auth = LocalAuthentication();
   String verifyId = "";
 
+  Future<String?> getUserToken() async {
+    User? user = _auth.currentUser;
+    return user != null ? await user.getIdToken() : null;
+  }
+
+  Future<String?> getFreshToken() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      await user.reload();
+      return await user.getIdToken(true);
+    }
+    return null;
+  }
+
   Future<String> createAccount(
       String email, String password, String name) async {
     try {
       await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+          email: email, password: password);
       await _auth.currentUser!.updateDisplayName(name);
       await _auth.currentUser!.sendEmailVerification();
       return "Success";
     } on FirebaseAuthException catch (e) {
-      return e.message!;
+      return e.message ?? 'Unknown error';
+    } catch (e) {
+      return 'An unexpected error occurred: $e';
     }
   }
 
-  Future<bool> checkMovileSupportFingerprint() async {
-    bool isSupport = await auth.canCheckBiometrics;
-    return isSupport;
+  Future<bool> checkMobileSupportFingerprint() async {
+    return await auth.canCheckBiometrics;
   }
 
   Future<String> checkFingerprint() async {
     bool isAuthenticated = false;
     try {
       isAuthenticated = await auth.authenticate(
-        localizedReason: 'Please authenticate for fingerprint',
+        localizedReason: 'Please authenticate using fingerprint',
         options: const AuthenticationOptions(
           biometricOnly: true,
           stickyAuth: true,
@@ -49,29 +61,35 @@ class AuthFirebase {
     } catch (e) {
       print(e);
     }
-    return isAuthenticated && _auth.currentUser!.emailVerified
-        ? "Success"
-        : "Email Not Verified";
+    if (isAuthenticated) {
+      if (_auth.currentUser!.emailVerified) {
+        return "Success";
+      } else {
+        return "Email not verified. Please verify your email first.";
+      }
+    } else {
+      return "Fingerprint authentication failed";
+    }
   }
 
   Future<String> uploadAvatar(String idUser, File imageFile) async {
-    final ref = _database.ref("user").child("imageHastag").child(idUser);
+    final ref = _database.ref("user").child("imageHashtag").child(idUser);
     try {
       if (_auth.currentUser?.photoURL != null) {
-        String hastag = "";
+        String hashtag = "";
         final snapshot = await ref.get();
         final data = Map<String, String>.from(snapshot.value as Map);
-        hastag = data["hastag"]!;
-        await ImagurService.deleteImage(hastag);
+        hashtag = data["hashtag"]!;
+        await ImagurService.deleteImage(hashtag);
       }
       List<String> image = await ImagurService.uploadImage(imageFile);
       await _auth.currentUser!.updatePhotoURL(image.first);
-      final data = {"hastag": image.last};
+      final data = {"hashtag": image.last};
       await ref.set(data);
       await _auth.currentUser!.reload();
       return "Success";
     } catch (e) {
-      return "$e";
+      return "Error: $e";
     }
   }
 
@@ -79,10 +97,9 @@ class AuthFirebase {
     try {
       UserCredential user = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      bool isEmailVerifield = user.user!.emailVerified;
-      return isEmailVerifield ? "Success" : "Email Not Verified";
+      return user.user!.emailVerified ? "Success" : "Email Not Verified";
     } on FirebaseAuthException catch (e) {
-      return "${e.message}";
+      return e.message ?? 'Unknown error';
     }
   }
 
@@ -95,22 +112,18 @@ class AuthFirebase {
             data["password"] == _generateMd5(password)) {
           return "Success";
         }
-        return "Email and password wrong.";
+        return "Incorrect email or password";
       } else {
-        return "Dont account admin";
+        return "Admin account not found";
       }
     } on FirebaseException catch (e) {
-      return "${e.message}";
+      return "Error: ${e.message}";
     }
   }
 
   Future<bool> checkUserNotNull() async {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      bool isEmailVerified = user.emailVerified;
-      return isEmailVerified;
-    }
-    return false;
+    return user != null && user.emailVerified;
   }
 
   Future<String> forgetPassword(String email) async {
@@ -119,28 +132,24 @@ class AuthFirebase {
       return "Success";
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        return 'No user found with this email.';
+        return 'No user found with this email';
       } else if (e.code == 'invalid-email') {
-        return 'The email address is not valid.';
+        return 'Invalid email address';
       } else {
-        return 'An error occurred. Please try again.';
+        return 'An error occurred. Please try again';
       }
-    } catch (e) {
-      return 'An error occurred. Please try again.';
     }
   }
 
   Future<Auth> getUser() async {
-    _auth.currentUser!.reload();
+    await _auth.currentUser!.reload();
     User auth = _auth.currentUser!;
-    Auth user = Auth(
+    return Auth(
       gmail: auth.email!,
       userName: auth.displayName!,
       phone: auth.phoneNumber ?? "",
       image: auth.photoURL ?? "",
-    );
-    user.setId = auth.uid;
-    return user;
+    )..setId = auth.uid;
   }
 
   Future<String> changePassword(String newPassword) async {
@@ -148,11 +157,7 @@ class AuthFirebase {
       await _auth.currentUser!.updatePassword(newPassword);
       return "Success";
     } on FirebaseException catch (e) {
-      print(e.message);
-      return "$e";
-    } catch (e) {
-      print(e);
-      return "$e";
+      return "Error: ${e.message}";
     }
   }
 
@@ -161,11 +166,7 @@ class AuthFirebase {
       await _auth.currentUser!.updateDisplayName(name);
       return "Success";
     } on FirebaseException catch (e) {
-      print(e.message);
-      return "$e";
-    } catch (e) {
-      print(e);
-      return "$e";
+      return "Error: ${e.message}";
     }
   }
 

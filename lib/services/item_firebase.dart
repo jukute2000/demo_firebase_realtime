@@ -1,12 +1,30 @@
 import 'dart:io';
 import 'package:demo_firebase_realtime/models/item_model.dart';
 import 'package:demo_firebase_realtime/services/imagur_service.dart';
+import 'package:demo_firebase_realtime/widgets/snackbar_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:get/get.dart';
+import 'token_service.dart';
 
 class ItemFirebase {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
+  final TokenService _tokenService = TokenService();
+
+  Future<bool> checkToken() async {
+    bool isValidToken = await _tokenService.checkToken();
+    if (!isValidToken) {
+      Get.showSnackbar(SnackbarWidget.snackBarWidget(
+          title: "False", message: "Please log in again", isSuccess: false));
+      FirebaseAuth.instance.signOut();
+      Get.offAllNamed("/loginSignup");
+      return true;
+    }
+    return false;
+  }
 
   Future<List<Item>> fetchItems(bool isUser) async {
+    if (await checkToken()) return [];
     DatabaseReference ref = _database.ref("items");
     List<Item> items = [];
     final snapshot = await ref.get();
@@ -35,6 +53,7 @@ class ItemFirebase {
   }
 
   Future<List<Item>> getItemsByIdtype(bool isUser, String idType) async {
+    if (await checkToken()) return [];
     DatabaseReference ref = _database.ref("items");
     List<Item> items = [];
     final snapshot = await ref.get();
@@ -63,6 +82,7 @@ class ItemFirebase {
   }
 
   Future<List<Item>> getItemsBySearch(bool isUser, String searchStr) async {
+    if (await checkToken()) return [];
     DatabaseReference ref = _database.ref("items");
     List<Item> items = [];
     final snapshot = await ref.get();
@@ -108,6 +128,7 @@ class ItemFirebase {
 
   Future<bool> deleteItem(String id, String tagImage) async {
     try {
+      if (await checkToken()) return false;
       await _database.ref("items").child(id).remove();
       await ImagurService.deleteImage(tagImage);
       return true;
@@ -125,6 +146,7 @@ class ItemFirebase {
       required File imageFile,
       required int status}) async {
     bool isTemp = false;
+    if (await checkToken()) return false;
     List<String> image = await ImagurService.uploadImage(imageFile);
     if (image.isNotEmpty) {
       Map<String, dynamic> data = {
@@ -154,6 +176,7 @@ class ItemFirebase {
       required File imageFile,
       required int status}) async {
     bool isSuccess = false;
+    if (await checkToken()) return false;
     List<String> urlImage = await ImagurService.uploadImage(imageFile);
     if (urlImage.isNotEmpty) {
       Map<String, dynamic> data = {
@@ -182,6 +205,7 @@ class ItemFirebase {
       required String tagImage,
       required int status}) async {
     bool isSuccess = false;
+    if (await checkToken()) return false;
     Map<String, dynamic> data = {
       "title": title,
       "idType": idType,

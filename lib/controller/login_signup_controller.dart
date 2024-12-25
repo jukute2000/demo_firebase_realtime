@@ -48,7 +48,7 @@ class LoginSignupController extends GetxController {
 
   Future<void> init() async {
     isUserNotNull = await _auth.checkUserNotNull();
-    isSupportFingerprint = await _auth.checkMovileSupportFingerprint();
+    isSupportFingerprint = await _auth.checkMobileSupportFingerprint();
     isLoading.value = false;
   }
 
@@ -67,23 +67,19 @@ class LoginSignupController extends GetxController {
     } else if (isSuccess == "Email Not Verified") {
       await emailNotVerifiled();
     } else {
-      Get.showSnackbar(
-        SnackbarWidget.snackBarWidget(
-          title: "Fail",
-          message: "Incorrect fingerprint",
-          isSuccess: false,
-        ),
+      showSnackbar(
+        title: "Fail",
+        message: "Incorrect fingerprint",
+        isSuccess: false,
       );
     }
   }
 
   Future<void> emailNotVerifiled() async {
-    Get.showSnackbar(
-      SnackbarWidget.snackBarWidget(
-        title: "Fail",
-        message: "Email not verifiled and send email verifiled",
-        isSuccess: false,
-      ),
+    showSnackbar(
+      title: "Fail",
+      message: "Email not verifiled and send email verifiled",
+      isSuccess: false,
     );
     await FirebaseAuth.instance.currentUser!.sendEmailVerification();
   }
@@ -96,55 +92,34 @@ class LoginSignupController extends GetxController {
   }
 
   Future<void> forgetPassword() async {
-    Get.showSnackbar(
-      SnackbarWidget.snackBarWidget(
-        title: "Success",
-        message: "Reset password sent ${emailForgetPassword.text}",
-        isSuccess: true,
-      ),
-    );
-    changeIsForgetPassword(false);
-    String isSuccess = await _auth.forgetPassword(emailForgetPassword.text);
-    if (isSuccess != "Success") {
-      Get.showSnackbar(
-        SnackbarWidget.snackBarWidget(
-          title: "Fail",
-          message: isSuccess,
-          isSuccess: false,
-        ),
-      );
+    String result = await _auth.forgetPassword(emailForgetPassword.text);
+    if (result == "Success") {
+      showSnackbar(
+          title: "Success",
+          message: "Reset password sent to ${emailForgetPassword.text}",
+          isSuccess: true);
+    } else {
+      showSnackbar(title: "Fail", message: result, isSuccess: false);
     }
     emailForgetPassword.clear();
   }
 
   Future<void> onSubmitLogin() async {
     if (await _auth.checkAdmin(gmail.text, password.text) == "Success") {
-      SnackbarWidget.snackBarWidget(
-        title: "Success",
-        message: "Login admin success",
-        isSuccess: true,
-      );
+      showSnackbar(
+          title: "Success", message: "Login admin success", isSuccess: true);
       resetTextEdit();
       Get.offAllNamed("/authorHome");
     } else {
       String message = await _auth.loginAccount(gmail.text, password.text);
       if (message == "Success") {
-        SnackbarWidget.snackBarWidget(
-          title: "Success",
-          message: "Login success",
-          isSuccess: true,
-        );
+        showSnackbar(
+            title: "Success", message: "Login success", isSuccess: true);
         Get.offAndToNamed("/userHome");
       } else if (message == "Email Not Verified") {
         await emailNotVerifiled();
       } else {
-        Get.showSnackbar(
-          SnackbarWidget.snackBarWidget(
-            title: "Fail",
-            message: message,
-            isSuccess: false,
-          ),
-        );
+        showSnackbar(title: "Fail", message: message, isSuccess: false);
       }
     }
   }
@@ -154,24 +129,13 @@ class LoginSignupController extends GetxController {
       String message =
           await _auth.createAccount(gmail.text, password.text, username.text);
       if (message == "Success") {
-        Get.showSnackbar(
-          SnackbarWidget.snackBarWidget(
-            title: "Success",
-            message: "Create success",
-            isSuccess: true,
-          ),
-        );
+        showSnackbar(
+            title: "Success", message: "Create success", isSuccess: true);
         await emailNotVerifiled();
       } else if (message == "Email Not Verifiled") {
         await emailNotVerifiled();
       } else {
-        Get.showSnackbar(
-          SnackbarWidget.snackBarWidget(
-            title: "Fail",
-            message: message,
-            isSuccess: false,
-          ),
-        );
+        showSnackbar(title: "Fail", message: message, isSuccess: false);
       }
     }
   }
@@ -186,5 +150,18 @@ class LoginSignupController extends GetxController {
     username.clear();
     password.clear();
     rePassword.clear();
+  }
+
+  void showSnackbar(
+      {required String title,
+      required String message,
+      required bool isSuccess}) {
+    Get.showSnackbar(
+      SnackbarWidget.snackBarWidget(
+        title: title,
+        message: message,
+        isSuccess: isSuccess,
+      ),
+    );
   }
 }

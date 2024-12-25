@@ -1,14 +1,32 @@
 import 'package:demo_firebase_realtime/models/cart_model.dart';
+import 'package:demo_firebase_realtime/services/token_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../models/order_model.dart';
+import '../widgets/snackbar_widget.dart';
 
 class OrderFirebase {
   final _database = FirebaseDatabase.instance;
+  final _tokenService = TokenService();
+
+  Future<bool> checkToken() async {
+    bool isValidToken = await _tokenService.checkToken();
+    if (!isValidToken) {
+      Get.showSnackbar(SnackbarWidget.snackBarWidget(
+          title: "False", message: "Please log in again", isSuccess: false));
+      FirebaseAuth.instance.signOut();
+      Get.offAllNamed("/loginSignup");
+      return true;
+    }
+    return false;
+  }
 
   Future<bool> createOrder(String idUser, String date,
       List<Map<String, dynamic>> dataCarts, String message) async {
+    if (await checkToken()) return false;
     final data = {
       "date": date,
       "carts": dataCarts,
@@ -43,6 +61,7 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getOrderByDate(List<DateTime?>? listDate) async {
+    if (await checkToken()) return [];
     final ref = _database.ref("order");
     List<Order> orders = [];
     try {
@@ -90,6 +109,7 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getOrderBySearch(String searchStr) async {
+    if (await checkToken()) return [];
     final ref = _database.ref("order");
     List<Order> orders = [];
     try {
@@ -135,6 +155,7 @@ class OrderFirebase {
 
   Future<void> editOrderStatus(String idOrder, String date, List<Cart> carts,
       int status, String message) async {
+    if (await checkToken()) return;
     final ref = _database.ref("order");
     try {
       String idUser = "";
@@ -172,6 +193,7 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getAllOrders() async {
+    if (await checkToken()) return [];
     List<Order> orders = [];
     final ref = _database.ref("order");
     try {
@@ -213,11 +235,13 @@ class OrderFirebase {
   }
 
   Future<void> deleteOrderById(String idUser, String idOrder) async {
+    if (await checkToken()) return;
     final ref = _database.ref("order").child(idUser).child(idOrder);
     await ref.remove();
   }
 
   Future<void> deleteOrderAdminById(String idOrder) async {
+    if (await checkToken()) return;
     final ref = _database.ref("order");
     final snapshot = await ref.get();
     Map<String, dynamic> data =
@@ -243,6 +267,7 @@ class OrderFirebase {
 
   Future<List<Order>> getOrdersUserBySearch(
       String idUser, String search) async {
+    if (await checkToken()) return [];
     final ref = _database.ref("order").child(idUser);
     List<Order> orders = [];
     final snapshot = await ref.get();
@@ -277,6 +302,7 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getOrdersUserByStatus(String idUser, int status) async {
+    if (await checkToken()) return [];
     final ref = _database.ref("order").child(idUser);
     List<Order> orders = [];
     final snapshot = await ref.get();
@@ -311,6 +337,7 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getOrdersAdminByStatus(int status) async {
+    if (await checkToken()) return [];
     final ref = _database.ref("order");
     List<Order> orders = [];
     final snapshot = await ref.get();
@@ -351,6 +378,7 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getOrders(String idUser) async {
+    if (await checkToken()) return [];
     final ref = _database.ref("order").child(idUser);
     List<Order> orders = [];
     final snapshot = await ref.get();
