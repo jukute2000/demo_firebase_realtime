@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class LoginSignupController extends GetxController {
@@ -22,7 +23,7 @@ class LoginSignupController extends GetxController {
   RxBool isPolicy = false.obs;
   bool isSupportFingerprint = false;
   RxBool isForgetPassword = false.obs;
-
+  static FlutterSecureStorage storge = FlutterSecureStorage();
   void changeIsForgetPassword(bool isClear) {
     isForgetPassword.value = !isForgetPassword.value;
     if (isClear) emailForgetPassword.clear();
@@ -49,6 +50,7 @@ class LoginSignupController extends GetxController {
   Future<void> init() async {
     isUserNotNull = await _auth.checkUserNotNull();
     isSupportFingerprint = await _auth.checkMobileSupportFingerprint();
+    if (isUserNotNull! && isSupportFingerprint) await readGmailStorge();
     isLoading.value = false;
   }
 
@@ -115,6 +117,7 @@ class LoginSignupController extends GetxController {
       if (message == "Success") {
         showSnackbar(
             title: "Success", message: "Login success", isSuccess: true);
+        saveGmailStorge();
         Get.offAndToNamed("/userHome");
       } else if (message == "Email Not Verified") {
         await emailNotVerifiled();
@@ -140,9 +143,10 @@ class LoginSignupController extends GetxController {
     }
   }
 
-  void changePageAddEdit() {
+  Future<void> changePageLoginOrSignIn() async {
     isPageLogin.value = !isPageLogin.value;
     reset();
+    if (isPageLogin.value) await readGmailStorge();
   }
 
   void reset() {
@@ -163,5 +167,14 @@ class LoginSignupController extends GetxController {
         isSuccess: isSuccess,
       ),
     );
+  }
+
+  Future<void> readGmailStorge() async {
+    gmail.text = await storge.read(key: "user_gmail") ?? "";
+  }
+
+  void saveGmailStorge() {
+    storge.write(
+        key: "user_gmail", value: FirebaseAuth.instance.currentUser!.email);
   }
 }

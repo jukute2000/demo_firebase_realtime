@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:demo_firebase_realtime/controller/login_signup_controller.dart';
 import 'package:demo_firebase_realtime/models/auth_model.dart';
 import 'package:demo_firebase_realtime/services/address_firebase.dart';
 import 'package:demo_firebase_realtime/services/auth_firebase.dart';
@@ -45,6 +46,7 @@ class UserController extends GetxController {
 
   Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
+    LoginSignupController.storge.delete(key: "user_gmail");
     Get.offAllNamed("/loginSignup");
   }
 

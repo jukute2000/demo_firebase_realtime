@@ -17,8 +17,8 @@ class LoginSignupView extends StatelessWidget {
         leading: Obx(
           () => !controller.isPageLogin.value
               ? BackButton(
-                  onPressed: () {
-                    controller.changePageAddEdit();
+                  onPressed: () async {
+                    await controller.changePageLoginOrSignIn();
                   },
                 )
               : Container(),
@@ -323,8 +323,9 @@ class LoginSignupView extends StatelessWidget {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: () {
-                                      controller.changePageAddEdit();
+                                    onPressed: () async {
+                                      await controller
+                                          .changePageLoginOrSignIn();
                                     },
                                     child: Text(
                                       "SIGN UP",
