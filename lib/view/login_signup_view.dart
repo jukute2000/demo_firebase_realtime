@@ -240,8 +240,11 @@ class LoginSignupView extends StatelessWidget {
                                         ),
                                       ),
                                       child: controller.isPolicy.value
-                                          ? const Icon(Icons.done,
-                                              color: Colors.green)
+                                          ? const FittedBox(
+                                              fit: BoxFit.contain,
+                                              child: Icon(Icons.done,
+                                                  color: Colors.green),
+                                            )
                                           : null,
                                     ),
                                   )
