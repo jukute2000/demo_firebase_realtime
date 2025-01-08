@@ -308,7 +308,33 @@ class LoginSignupView extends StatelessWidget {
                               ),
                             if (controller.isPageLogin.value)
                               SizedBox(
-                                height: size.height * 0.1,
+                                height: size.height * 0.05,
+                              ),
+                            if (controller.isPageLogin.value)
+                              Column(
+                                children: [
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(child: Divider()),
+                                      Text(" Login with "),
+                                      Expanded(child: Divider())
+                                    ],
+                                  ),
+                                  IconButton(
+                                    onPressed: () => controller.onLoginGoogle(),
+                                    icon: Image(
+                                      image: const AssetImage(
+                                        "assets/images/google.png",
+                                      ),
+                                      height: size.width * 0.1,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            if (controller.isPageLogin.value)
+                              SizedBox(
+                                height: size.height * 0.05,
                               ),
                             if (controller.isPageLogin.value)
                               Row(

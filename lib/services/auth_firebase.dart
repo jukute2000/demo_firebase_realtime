@@ -7,6 +7,7 @@ import 'package:demo_firebase_realtime/widgets/snackbar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:local_auth/local_auth.dart';
 
 class AuthFirebase {
@@ -100,6 +101,36 @@ class AuthFirebase {
       return user.user!.emailVerified ? "Success" : "Email Not Verified";
     } on FirebaseAuthException catch (e) {
       return e.message ?? 'Unknown error';
+    }
+  }
+
+  Future<String> loginedGoogle() async {
+    try {
+      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      return "Success";
+    } on FirebaseException catch (e) {
+      if (e.code == "invalid-credential" || e.code == "wrong-password") {
+        return "Invalid email password or invalid account";
+      } else if (e.code == "invalid-email") {
+        return "Invalid email address";
+      } else if (e.code == "user-disabled") {
+        return "Email address has been disabled";
+      } else if (e.code == "user-not-found") {
+        return "No corresponding email";
+      } else if (e.code == "too-many-requests") {
+        return "User sending too many requests";
+      } else if (e.code == "network-request-failed") {
+        return "User is not connected to the internet";
+      }
+      return e.code;
+    } catch (e) {
+      return "$e";
     }
   }
 

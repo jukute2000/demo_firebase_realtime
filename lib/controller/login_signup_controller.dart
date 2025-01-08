@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 
 class LoginSignupController extends GetxController {
   final AuthFirebase _auth = AuthFirebase();
-
   RxBool isPageLogin = true.obs;
   TextEditingController gmail = TextEditingController();
   TextEditingController username = TextEditingController();
@@ -23,7 +22,8 @@ class LoginSignupController extends GetxController {
   RxBool isPolicy = false.obs;
   bool isSupportFingerprint = false;
   RxBool isForgetPassword = false.obs;
-  static FlutterSecureStorage storge = FlutterSecureStorage();
+  static FlutterSecureStorage storge = const FlutterSecureStorage();
+
   void changeIsForgetPassword(bool isClear) {
     isForgetPassword.value = !isForgetPassword.value;
     if (isClear) emailForgetPassword.clear();
@@ -62,6 +62,16 @@ class LoginSignupController extends GetxController {
     }
   }
 
+  Future<void> onLoginGoogle() async {
+    String mess = await _auth.loginedGoogle();
+    if (mess == "Success") {
+      showSnackbar(title: "Success", message: "Login success", isSuccess: true);
+      Get.offAndToNamed("/userHome");
+    } else {
+      showSnackbar(title: "Fail", message: mess, isSuccess: false);
+    }
+  }
+
   Future<void> loginFingerPrint() async {
     String isSuccess = await _auth.checkFingerprint();
     if (isSuccess == "Success") {
@@ -83,7 +93,7 @@ class LoginSignupController extends GetxController {
       message: "Email not verifiled and send email verifiled",
       isSuccess: false,
     );
-    await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+    FirebaseAuth.instance.currentUser!.sendEmailVerification();
   }
 
   void resetTextEdit() {
@@ -97,9 +107,10 @@ class LoginSignupController extends GetxController {
     String result = await _auth.forgetPassword(emailForgetPassword.text);
     if (result == "Success") {
       showSnackbar(
-          title: "Success",
-          message: "Reset password sent to ${emailForgetPassword.text}",
-          isSuccess: true);
+        title: "Success",
+        message: "Reset password sent to ${emailForgetPassword.text}",
+        isSuccess: true,
+      );
     } else {
       showSnackbar(title: "Fail", message: result, isSuccess: false);
     }
@@ -120,7 +131,7 @@ class LoginSignupController extends GetxController {
         saveGmailStorge();
         Get.offAndToNamed("/userHome");
       } else if (message == "Email Not Verified") {
-        await emailNotVerifiled();
+        emailNotVerifiled();
       } else {
         showSnackbar(title: "Fail", message: message, isSuccess: false);
       }
@@ -134,9 +145,7 @@ class LoginSignupController extends GetxController {
       if (message == "Success") {
         showSnackbar(
             title: "Success", message: "Create success", isSuccess: true);
-        await emailNotVerifiled();
-      } else if (message == "Email Not Verifiled") {
-        await emailNotVerifiled();
+        changePageLoginOrSignIn();
       } else {
         showSnackbar(title: "Fail", message: message, isSuccess: false);
       }
@@ -145,15 +154,8 @@ class LoginSignupController extends GetxController {
 
   Future<void> changePageLoginOrSignIn() async {
     isPageLogin.value = !isPageLogin.value;
-    reset();
+    resetTextEdit();
     if (isPageLogin.value) await readGmailStorge();
-  }
-
-  void reset() {
-    gmail.clear();
-    username.clear();
-    password.clear();
-    rePassword.clear();
   }
 
   void showSnackbar(
