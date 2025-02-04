@@ -60,8 +60,9 @@ class OrderFirebase {
     return false;
   }
 
-  Future<List<Order>> getOrderByDate(List<DateTime?>? listDate) async {
-    if (await checkToken()) return [];
+  Future<List<Order>> getOrderByDate(
+      bool isUser, List<DateTime?>? listDate) async {
+    if (isUser && await checkToken()) return [];
     final ref = _database.ref("order");
     List<Order> orders = [];
     try {
@@ -108,8 +109,8 @@ class OrderFirebase {
     }
   }
 
-  Future<List<Order>> getOrderBySearch(String searchStr) async {
-    if (await checkToken()) return [];
+  Future<List<Order>> getOrderBySearch(bool isUser, String searchStr) async {
+    if (isUser && await checkToken()) return [];
     final ref = _database.ref("order");
     List<Order> orders = [];
     try {
@@ -155,7 +156,6 @@ class OrderFirebase {
 
   Future<void> editOrderStatus(String idOrder, String date, List<Cart> carts,
       int status, String message) async {
-    if (await checkToken()) return;
     final ref = _database.ref("order");
     try {
       String idUser = "";
@@ -193,7 +193,6 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getAllOrders() async {
-    if (await checkToken()) return [];
     List<Order> orders = [];
     final ref = _database.ref("order");
     try {
@@ -241,7 +240,6 @@ class OrderFirebase {
   }
 
   Future<void> deleteOrderAdminById(String idOrder) async {
-    if (await checkToken()) return;
     final ref = _database.ref("order");
     final snapshot = await ref.get();
     Map<String, dynamic> data =
@@ -267,7 +265,6 @@ class OrderFirebase {
 
   Future<List<Order>> getOrdersUserBySearch(
       String idUser, String search) async {
-    if (await checkToken()) return [];
     final ref = _database.ref("order").child(idUser);
     List<Order> orders = [];
     final snapshot = await ref.get();
@@ -337,7 +334,6 @@ class OrderFirebase {
   }
 
   Future<List<Order>> getOrdersAdminByStatus(int status) async {
-    if (await checkToken()) return [];
     final ref = _database.ref("order");
     List<Order> orders = [];
     final snapshot = await ref.get();

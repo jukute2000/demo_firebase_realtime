@@ -312,7 +312,7 @@ class AuthorHomeController extends GetxController {
       searchOrder.text = "";
       itemOrder.clear();
       listStatusOrders.clear();
-      orders = await _orderFirebase.getOrderByDate(listDate);
+      orders = await _orderFirebase.getOrderByDate(false, listDate);
       if (orders.isNotEmpty) {
         isOrdersNull.value = false;
       } else {
@@ -347,7 +347,7 @@ class AuthorHomeController extends GetxController {
     itemOrder.clear();
     listStatusOrders.clear();
     if (searchOrder.text != "") {
-      orders = await _orderFirebase.getOrderBySearch(searchOrder.text);
+      orders = await _orderFirebase.getOrderBySearch(false, searchOrder.text);
       if (orders.isNotEmpty) {
         isSearchOrder.value = false;
         for (var element in orders) {

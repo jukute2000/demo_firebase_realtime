@@ -141,7 +141,7 @@ class UserHomeController extends GetxController {
     );
     if (listDate != null) {
       isLoading.value = true;
-      orders = await _orderFirebase.getOrderByDate(listDate);
+      orders = await _orderFirebase.getOrderByDate(true, listDate);
       itemOrder.clear();
       statusOrders.clear();
       searchOrder.clear();
