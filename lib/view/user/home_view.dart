@@ -38,6 +38,7 @@ class UserHomeView extends StatelessWidget {
               ),
       ),
       appBar: AppBar(
+        surfaceTintColor: AppTheme.primaryColor,
         backgroundColor: AppTheme.primaryColor,
         leading: Obx(
           () => controller.isLoading.value

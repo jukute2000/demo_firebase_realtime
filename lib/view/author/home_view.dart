@@ -20,6 +20,7 @@ class AuthHomeView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.primaryColor,
       appBar: AppBar(
+        surfaceTintColor: AppTheme.primaryColor,
         backgroundColor: AppTheme.primaryColor,
         leading: Obx(
           () => controller.isLoading.value
