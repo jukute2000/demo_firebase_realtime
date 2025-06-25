@@ -328,7 +328,6 @@ class UserView extends StatelessWidget {
 
 class _editWidget extends StatelessWidget {
   const _editWidget({
-    super.key,
     required this.controller,
     required this.size,
     required this.child,
@@ -358,7 +357,6 @@ class _editWidget extends StatelessWidget {
 
 class _textFiledWidget extends StatelessWidget {
   const _textFiledWidget({
-    super.key,
     required this.labelText,
     required this.size,
     required this.textController,
@@ -408,7 +406,6 @@ class _textFiledWidget extends StatelessWidget {
 
 class _textButtonWidget extends StatelessWidget {
   const _textButtonWidget({
-    super.key,
     required this.type,
     required this.detailType,
     required this.size,
@@ -487,7 +484,6 @@ class _textButtonWidget extends StatelessWidget {
 
 class _addressButtonWidget extends StatelessWidget {
   const _addressButtonWidget({
-    super.key,
     required this.type,
     required this.size,
     required this.controller,

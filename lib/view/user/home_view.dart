@@ -3,6 +3,7 @@ import 'package:demo_firebase_realtime/models/item_model.dart';
 import 'package:demo_firebase_realtime/untils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import '../../models/auth_model.dart';
 import '../../models/cart_model.dart';
 import '../../models/type_item_model.dart';
@@ -14,10 +15,11 @@ class UserHomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     UserHomeController controller = Get.put(UserHomeController());
     final size = MediaQuery.of(context).size;
-    List<Widget> _bodyWidget = [
+    List<Widget> bodyWidget = [
       _home(controller: controller, size: size),
       _order(controller: controller, size: size),
     ];
+
     return Scaffold(
       backgroundColor: AppTheme.primaryColor,
       floatingActionButton: Obx(
@@ -148,7 +150,7 @@ class UserHomeView extends StatelessWidget {
                   color: Colors.grey,
                 ),
               )
-            : SafeArea(child: _bodyWidget[controller.pageSelect.value]),
+            : SafeArea(child: bodyWidget[controller.pageSelect.value]),
       ),
       bottomNavigationBar: Obx(
         () => controller.isLoading.value
@@ -161,7 +163,6 @@ class UserHomeView extends StatelessWidget {
 
 class _order extends StatelessWidget {
   const _order({
-    super.key,
     required this.controller,
     required this.size,
   });
@@ -525,7 +526,6 @@ class _order extends StatelessWidget {
 
 class _bottomNavigationBar extends StatelessWidget {
   const _bottomNavigationBar({
-    super.key,
     required this.controller,
   });
 
@@ -559,7 +559,6 @@ class _bottomNavigationBar extends StatelessWidget {
 
 class _home extends StatelessWidget {
   const _home({
-    super.key,
     required this.controller,
     required this.size,
   });
@@ -656,7 +655,6 @@ class _home extends StatelessWidget {
 
 class _productWidget extends StatelessWidget {
   const _productWidget({
-    super.key,
     required this.item,
     required this.user,
     required this.type,

@@ -12,6 +12,7 @@ import '../../models/item_model.dart';
 
 class OrderController extends GetxController {
   TextEditingController messageForShop = TextEditingController();
+  FocusNode focusNodeMessageForShop = FocusNode();
   RxBool isLoading = false.obs;
   String idProducts = "";
   String idUser = "";
@@ -27,6 +28,20 @@ class OrderController extends GetxController {
   final _cartFirebase = CartFirebase();
   final _addressFirebase = AddressFirebase();
   final _orderFirebase = OrderFirebase();
+
+  @override
+  void dispose() {
+    messageForShop.dispose();
+    focusNodeMessageForShop.dispose();
+    isLoading.close();
+    isAddressNull.close();
+    items.close();
+    carts.close();
+    address = null;
+    products.clear();
+    super.dispose();
+  }
+
   final Map<String, String> data;
   OrderController({required this.data}) {
     isLoading.value = true;
